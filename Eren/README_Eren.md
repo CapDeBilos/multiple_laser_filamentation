@@ -21,20 +21,14 @@ which accounts for:
 
 ---
 
-### Electron Density Dynamics
+## Electron Density Dynamics
 
-The electron density $\rho(r,t)$ is computed at each propagation step using:
+The electron density rho(r,t) is computed at each propagation step using:
 
-$$
-\frac{\partial \rho}{\partial t}
-=
-\frac{\sigma}{n_b^2 E_g} \rho |\varepsilon|^2
-+
-\frac{\beta^{(K)}}{K \hbar \omega} |\varepsilon|^{2K}
--
-\alpha \rho^2
-$$
-
+d rho / dt =
+(sigma / (n_b^2 * E_g)) * rho * |epsilon|^2
++ (beta_K / (K * hbar * omega)) * |epsilon|^(2K)
+- alpha * rho^2
 This includes:
 
 - avalanche ionization  
