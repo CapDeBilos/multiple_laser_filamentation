@@ -16,4 +16,4 @@
 - abstractize the code (for ease of use and efficiency)
 - run A BUNCH of sims, with different parameters, to see how it reacts to different conditions
 - find a way to run the sims on more powerful computers (ask professor about access to computer clusters)
-- look into possible applications and uses of this effect (the PRL of Rares, acceleration of electron beams in cavities)
+- look into possible applications and uses of this effect (the PRL of Rares, acceleration of electron beams in cavities, PWA paper to read most important)
