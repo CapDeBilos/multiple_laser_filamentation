@@ -1,6 +1,6 @@
-### Project history
+# Project history
 
-# Up until 12 April (what we did and what we still need to do)
+## Up until 12 April (what we did and what we still need to do)
 *Already done*:
 - implemented python code for the laser filamentation, including all the terms:
     - transverse diffraction
