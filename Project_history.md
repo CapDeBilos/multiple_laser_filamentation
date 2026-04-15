@@ -26,4 +26,7 @@
 - are we actually doing multiple laser filamentation? For now we have just used the cylindrical symmetry. Change to cartesian
 - to ease the memory usage, try to save periodically the data into a file (once every few steps). Then use the information from there
 - Would it be possible to change the resolution in r once filamentation occurs?
-- Can we combine Finite difference method with Spectral method? Use the Fourier transform in terms of $z$ with no time term. 
+- Can we combine Finite difference method with Spectral method? Use the Fourier transform in terms of $z$ with no time term.
+
+* TO DO *
+- Problems that need to be solved rigth now: what we have at the moment is a grid $z\times r\times t$ of the form 100_002 x 102 x 102. In this form, because of the small resolution along $r$, once the beam gets to the non-linear regime, it starts oscillating too much. To solve this, we need to increase the number of points in the radial vector (say by at least a factor of 10). To do this, we need to store the envelope of the electric field for diagnostics in a more memory-efficient way. 
