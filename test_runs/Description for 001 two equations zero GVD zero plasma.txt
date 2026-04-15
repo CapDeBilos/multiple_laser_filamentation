@@ -1,0 +1,4 @@
+This is a plot representing the max(I) along r and t for a given z for all values of z in the domain.
+It uses the two equations, one for the electric field and one for the electron density. 
+The initial conditions for this simulation were meant to be a sanity check.
+That means that the GVD term was set to zero, and the plasma term was set to zero. 
