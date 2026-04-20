@@ -31,3 +31,10 @@
 *TO DO*
 - Problems that need to be solved rigth now: what we have at the moment is a grid $z\times r\times t$ of the form 100_002 x 102 x 102. In this form, because of the small resolution along $r$, once the beam gets to the non-linear regime, it starts oscillating too much. To solve this, we need to increase the number of points in the radial vector (say by at least a factor of 10). To do this, we need to store the envelope of the electric field for diagnostics in a more memory-efficient way. 
 - parallel computing for the last step in the code (the nested for loop). This would allow the code to run in parallel on the cores of the CPU and make it much fast in theory. Try to parallelize the space steps, not time (because that depends on previous steps). Also, would it be possible to run using RAM?
+
+## 20 April 2026, Meeting with professor
+
+*To do*
+- $\Delta z$ seems to be too small for certain regimes. It is possible to switch grid sizes in the sensitive regions, when the intensity is very high. You can multiply with a factor $\frac{\Delta z_1}{\Delta z_0}$ when switching between them
+- Change the way plasma is solved, use method given by prof (exponentials with negative powers)
+- Time without time: it is possible to make the computations semi-atemporal, semi not depending on time.
