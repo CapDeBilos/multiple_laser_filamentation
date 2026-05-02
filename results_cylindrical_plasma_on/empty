@@ -1,1 +1,7 @@
+The results that can be found in this folder concerns the two coupled equations between the plasma electron density rho and the envelope of the electric field E
+
+The first equation, for the envelope of the electric field, contains all the terms, i.e, transversal diffraction, GVD, Kerr, MPA, and plasma term
+
+The second equation, for the plasma electron density, contains the ionization avalanche and the MPA avalanche, and not the readiative recombination as this 
+neglectable
 
