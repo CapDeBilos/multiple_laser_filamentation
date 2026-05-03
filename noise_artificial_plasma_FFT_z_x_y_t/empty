@@ -1,0 +1,7 @@
+In this repository, we added noise to the results in the previous artificial_plasma repository.
+
+The noise was added at the beginning. The amplitude of the envelope of the electric field was varied randomly (small fluctuations). 
+
+The phase of the envelope of the electric field was varied randomly (small fluctuations).
+
+The sweep was done from 0.1 * Pcr to 20 * Pcr, with increments of 0.1 * Pcr
