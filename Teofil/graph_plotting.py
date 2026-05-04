@@ -16,7 +16,7 @@ Problems to address:
 '''
 
 ########## For simulations in x, y, z, with artificial time
-class BeamSimulation:
+class BeamSimulationXYZ:
     def __init__(self, filename: str):
         self.load(filename)
 
@@ -125,7 +125,7 @@ class BeamSimulation:
 
 
 ########## Some tests
-sim_test = BeamSimulation('/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Teofil/test_runs/Pin_013p0_Pcr_gaussian_4D_FFT_diagnostics.npz')
+sim_test = BeamSimulationXYZ('/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Teofil/test_runs/Pin_013p0_Pcr_gaussian_4D_FFT_diagnostics.npz')
 # sim_test.on_axis_max_vs_z()
 # sim_test.beam_profile_xz()
 # sim_test.beam_profile_xy(0.5)
