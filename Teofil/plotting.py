@@ -12,8 +12,8 @@ Problems to address:
     argument then address this with an if statement in the function
 '''
 
-########## For simulations in x, y, z, with artificial time
-class BeamSimulationXYZ:
+########## For simulations in z, x, y, with artificial time
+class BeamSimulationZXY:
     def __init__(self, filepath: str, simulations_root: str, results_root: str):
         self.load(filepath)
         self.sim_dir    = os.path.dirname(os.path.abspath(filepath))
@@ -204,7 +204,7 @@ class BeamSimulationXYZ:
         # plt.show()
     '''
 
-class BeamSimulationXYZ_Noise:
+class BeamSimulationZXY_Noise:
     def __init__(self, filepath: str, simulations_root: str, results_root: str):
         self.load(filepath)
         self.sim_dir   = os.path.dirname(os.path.abspath(filepath))

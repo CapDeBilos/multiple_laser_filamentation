@@ -51,3 +51,25 @@ np.savez_compressed(
         noise_corr_y_factor=noise_corr_y_factor,
         amp_noise_clip_sigma=np.nan if amp_noise_clip_sigma is None else amp_noise_clip_sigma,
     )
+
+# FFT/zxy/square
+# same as FFT/zxy/gaussian/no_noise
+
+# FFT/zxt/gaussian
+np.savez_compressed(
+        npz_path,
+        pin_factor=pin_factor,
+        Pcr=Pcr,
+        z_diag=np.array(z_diag),
+        I_peak=np.array(I_peak),
+        I_center_tmax=np.array(I_center_tmax),
+        DeltaZ_diag=np.array(dz_diag),
+        Nx_diag=np.array(Nx_diag),
+        Nt_diag=np.array(Nt_diag),
+        x=x_cpu,
+        t=t_cpu,
+        I_final=I_final,
+    )
+
+
+# FFT/zxt/square
