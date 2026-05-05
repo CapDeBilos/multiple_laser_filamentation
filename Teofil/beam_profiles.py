@@ -35,7 +35,7 @@ def gaussian(r, Pin=1, width=0.5):
 
 
 # Hermite-Gauss TEM modes (eigenmodes), normalized using the envelope of the field
-def HG(x, y, Pin=1, width=0.5, l=0, m=0):
+def HG(x, y, Pin=1, width=0.1, l=0, m=0):
     Hm = hermite(l)
     Hn = hermite(m)
     A = np.sqrt(2 * Pin / (lightspeed * eps0 * np.pi * width**2 * 2**(l + m) * math.factorial(int(l)) * math.factorial(int(m)))) # normalized constant
@@ -58,11 +58,11 @@ Coming soon...
 
 ### Testing (veeeeeeeeeeeeeery nice picture)
 '''
-x = np.linspace(-2, 2, 100)
-y = np.linspace(-2, 2, 100)
+x = np.linspace(-2, 2, 1000)
+y = np.linspace(-2, 2, 1000)
 X, Y = np.meshgrid(x, y)
 l, m = 3, 2
-E = HG(X, Y, Pin=1.0, width=0.5, l=l, m=m)
+E = HG(X, Y, l=l, m=m)
 plt.figure(figsize=(6, 5))
 plt.imshow(E, extent=[x.min(), x.max(), y.min(), y.max()],
            origin='lower', cmap='inferno')
@@ -72,4 +72,4 @@ plt.xlabel('x')
 plt.ylabel('y')
 plt.tight_layout()
 plt.show()
-'''
+# '''
