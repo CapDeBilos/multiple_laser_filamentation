@@ -1,9 +1,0 @@
-In this file, you can find the results of the simulations for the envelope of the electric field
-
-The simulation of the enevelope of the electric field does not contain plasma
-
-This means that the plasma term has been turned off
-
-It only simulates transversal diffraction, GVD, Kerr, and MPA
-
-The sweep was done from Pin = 0.1 * Pcr to 20 * Pcr, with increments of 0.1 * Pcr
