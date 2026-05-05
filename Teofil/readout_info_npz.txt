@@ -73,3 +73,16 @@ np.savez_compressed(
 
 
 # FFT/zxt/square
+
+
+# FD/zrt/plasma
+np.savez(
+        outdir / f"{label}.npz",
+        z=new_z_diagnostic,
+        I_axis_max_t=new_I_axis_max_t,
+        I_ratio=I_ratio,
+        pin_factor=pin_factor,
+    )
+
+# FD/zrt/no_plasma
+# same as plasma

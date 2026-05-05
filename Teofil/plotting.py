@@ -412,3 +412,36 @@ class BeamSimulationZXY_hermite:
         plt.tight_layout()
         self.save(fig, f'profile_zy')
         # plt.show()
+
+
+class BeamSimulationZRT:
+    def __init__(self, filepath: str, simulations_root: str, results_root: str):
+        self.load(filepath)
+        self.sim_dir   = os.path.dirname(os.path.abspath(filepath))
+        self.file_name = f'Pin_{self.pin_factor:4.1f}Pcr'.replace('.', 'p')
+        self.res_dir   = os.path.join(results_root, os.path.relpath(self.sim_dir, simulations_root), self.file_name)
+        os.makedirs(self.res_dir, exist_ok=True)
+
+    def load(self, filepath: str):
+        data             = np.load(filepath, allow_pickle=True)
+        self.pin_factor  = data['pin_factor']
+        self.z           = data['z']
+        self.I_axis_max_t = data['I_axis_max_t']
+        self.I_ratio     = data['I_ratio']
+
+    def save(self, fig, name: str):
+        fig.savefig(os.path.join(self.res_dir, f'{name}.pdf'), dpi=150)
+        plt.close(fig)
+
+    def on_axis_max_vs_z(self):
+        fig, ax = plt.subplots(figsize=(8, 5))
+        ax.plot(self.z, self.I_ratio, color='green', label='$I_{max} / I_0$')
+
+        ax.set_title(f'$I_{{max}}(r=0, z)/I_0$, Pin={self.pin_factor}Pcr')
+        ax.set_xlabel('$z$ (m)')
+        ax.set_ylabel('$|I_{{max}}/I_0|$ (1)')
+        ax.legend()
+
+        ax.grid(True, alpha=0.3)
+        plt.tight_layout()
+        self.save(fig, 'max_I_vs_z')
