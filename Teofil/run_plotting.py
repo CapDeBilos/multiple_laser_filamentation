@@ -2,6 +2,7 @@ from plotting import *
 
 ########## Run the code on real data
 # run the plots for all subdirs of the Simulations directory, saving automatically to the Results directory
+# this works for zxy gaussian and zxy square
 def run_ZXY(simulations_root: str, results_root: str, zs):
     for dirpath, _, files in os.walk(simulations_root):
         for file in files:
@@ -20,10 +21,14 @@ def run_ZXY(simulations_root: str, results_root: str, zs):
                     print(f'Done with {filepath}')
                 except Exception as e:
                     print(f'Error processing {filepath}: {e}')
-
+# gaussian
 # run_ZXY('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/noise/',
         #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/noise/',
         #    np.arange(0.0, 4.0, 0.079611))
+# square
+run_ZXY('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/square/',
+           '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/square/',
+           np.arange(0.0, 4.0, 0.159222)) # 3 * 0.079611
 
 def run_ZXY_Noise(simulations_root: str, results_root: str):
     for dirpath, _, files in os.walk(simulations_root):
