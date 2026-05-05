@@ -119,6 +119,17 @@ def run_ZRT(simulations_root: str, results_root: str):
 # print(sim_test.snap_z)
 # print(np.size(sim_test.snap_z))
 
+########## Manual plotting
+sim = BeamSimulationZXY('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/many_diags/Pin_006p5_Pcr_gaussian_4D_FFT_diagnostics.npz',
+                        '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/many_diags/',
+                        '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/no_noise/many_diags/Pin_ 6p5Pcr/_manual')
+fig, ax = sim.profile_x(z=0)
+for z in [0.239, 0.478, 0.716, 0.955]:
+    fig, ax = sim.profile_x(z, fig=fig, ax=ax)
+ax.set_title(f'Intensity profile $I(x, y=0, z)/I_0$, Pin=6.5Pcr, artificial time')
+ax.legend()
+sim.save(fig, 'profile_x_many_z')
+
 # plot all files in all the dirs in a list of paths
 '''
 def plot_from_dirs(paths: list[str]):

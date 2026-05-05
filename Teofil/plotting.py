@@ -69,16 +69,18 @@ class BeamSimulationZXY:
         self.save(fig, f'max_I_vs_z')
         # plt.show()
     
-    def profile_x(self, z: float):
-        z_idx = np.clip(np.searchsorted(self.snap_z, z), 0, len(self.snap_z) - 1)
+    def profile_x(self, z: float, fig=None, ax=None):
+        z_idx = np.argmin(np.abs(self.snap_z - z))
         z_val = self.snap_z[z_idx]
         z_str = f'{z_val:.3f}'.replace('.', 'p')
         x = self.snap_x[z_idx]
         snap = self.snaps_n[z_idx]
         I_n = snap[:, snap.shape[1] // 2]
 
-        fig, ax = plt.subplots(figsize=(8, 5))
-        ax.plot(x, I_n, color='red', label='$I(x, y=0) / I_0$')
+        if fig is None or ax is None:
+            fig, ax = plt.subplots(figsize=(8, 5))
+
+        ax.plot(x, I_n, label=f'$I(x, y=0, z={z_val:5.3f}) / I_0$')
         # ax.set_ylim(0, 10)
         ax.set_title(f'Intensity profile $I(x, y=0, z = {z_val:.3f})/I_0$, Pin={self.pin_factor}Pcr, artificial time')
         ax.set_xlabel('$x$ (m)')
@@ -88,9 +90,10 @@ class BeamSimulationZXY:
         plt.tight_layout()
         self.save(fig, f'profile_x_z_{z_str}')
         # plt.show()
+        return(fig, ax)
     
     def profile_y(self, z: float):
-        z_idx = np.clip(np.searchsorted(self.snap_z, z), 0, len(self.snap_z) - 1)
+        z_idx = np.argmin(np.abs(self.snap_z - z))
         z_val = self.snap_z[z_idx]
         z_str = f'{z_val:.3f}'.replace('.', 'p')
         y = self.snap_y[z_idx]
@@ -110,7 +113,7 @@ class BeamSimulationZXY:
         # plt.show()
 
     def profile_xy(self, z: float):
-        z_idx = np.clip(np.searchsorted(self.snap_z, z), 0, len(self.snap_z) - 1)
+        z_idx = np.argmin(np.abs(self.snap_z - z))
         z_val = self.snap_z[z_idx]
         z_str = f'{z_val:.3f}'.replace('.', 'p')
         I_n = self.snaps_n[z_idx].T # because imshow treats array as (rows, cols) = (y, x)
@@ -316,7 +319,7 @@ class BeamSimulationZXY_hermite:
         # plt.show()
     
     def profile_x(self, z: float):
-        z_idx = np.clip(np.searchsorted(self.snap_z, z), 0, len(self.snap_z) - 1)
+        z_idx = np.argmin(np.abs(self.snap_z - z))
         z_val = self.snap_z[z_idx]
         z_str = f'{z_val:.3f}'.replace('.', 'p')
         x = self.snap_x[z_idx]
@@ -336,7 +339,7 @@ class BeamSimulationZXY_hermite:
         # plt.show()
     
     def profile_y(self, z: float):
-        z_idx = np.clip(np.searchsorted(self.snap_z, z), 0, len(self.snap_z) - 1)
+        z_idx = np.argmin(np.abs(self.snap_z - z))
         z_val = self.snap_z[z_idx]
         z_str = f'{z_val:.3f}'.replace('.', 'p')
         y = self.snap_y[z_idx]
@@ -356,7 +359,7 @@ class BeamSimulationZXY_hermite:
         # plt.show()
 
     def profile_xy(self, z: float):
-        z_idx = np.clip(np.searchsorted(self.snap_z, z), 0, len(self.snap_z) - 1)
+        z_idx = np.argmin(np.abs(self.snap_z - z))
         z_val = self.snap_z[z_idx]
         z_str = f'{z_val:.3f}'.replace('.', 'p')
         I_n = self.snaps_n[z_idx].T # because imshow treats array as (rows, cols) = (y, x)
