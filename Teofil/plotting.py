@@ -94,7 +94,7 @@ class BeamSimulationZXY:
         # plt.show()
         return(fig, ax)
     
-    def profile_y(self, z: float):
+    def profile_y(self, z: float, fig=None, ax=None, save=True):
         z_idx = np.argmin(np.abs(self.snap_z - z))
         z_val = self.snap_z[z_idx]
         z_str = f'{z_val:.3f}'.replace('.', 'p')
@@ -102,8 +102,10 @@ class BeamSimulationZXY:
         snap = self.snaps_n[z_idx]
         I_n = snap[snap.shape[0] // 2, :]
 
-        fig, ax = plt.subplots(figsize=(8, 5))
-        ax.plot(y, I_n, color='red', label='$I(x=0, y) / I_0$')
+        if fig is None or ax is None:
+            fig, ax = plt.subplots(figsize=(8, 5))
+
+        ax.plot(y, I_n, label='$I(x=0, y) / I_0$')
         # ax.set_ylim(0, 10)
         ax.set_title(f'Intensity profile $I(x=0, y, z = {z_val:.3f})/I_0$, Pin={self.pin_factor}Pcr, artificial time')
         ax.set_xlabel('$y$ (m)')
@@ -111,8 +113,10 @@ class BeamSimulationZXY:
         
         ax.grid(True, alpha=0.3)
         plt.tight_layout()
-        self.save(fig, f'profile_y_z_{z_str}')
+        if save:
+            self.save(fig, f'profile_y_z_{z_str}')
         # plt.show()
+        return(fig, ax)
 
     def profile_xy(self, z: float):
         z_idx = np.argmin(np.abs(self.snap_z - z))
@@ -120,7 +124,8 @@ class BeamSimulationZXY:
         z_str = f'{z_val:.3f}'.replace('.', 'p')
         I_n = self.snaps_n[z_idx].T # because imshow treats array as (rows, cols) = (y, x)
 
-        fig, ax = plt.subplots(figsize=(6, 6))
+        fig, ax = plt.subplots(figsize=(8, 5))
+
         c = ax.imshow(I_n, cmap='hot', aspect='equal', # vmin=0, vmax=5,
                 extent=[self.snap_x[z_idx][0], self.snap_x[z_idx][-1], self.snap_y[z_idx][0], self.snap_y[z_idx][-1]],
                 origin='lower')
@@ -320,7 +325,7 @@ class BeamSimulationZXY_hermite:
         self.save(fig, f'max_I_vs_z')
         # plt.show()
     
-    def profile_x(self, z: float):
+    def profile_x(self, z: float, fig=None, ax=None, save=True):
         z_idx = np.argmin(np.abs(self.snap_z - z))
         z_val = self.snap_z[z_idx]
         z_str = f'{z_val:.3f}'.replace('.', 'p')
@@ -328,8 +333,10 @@ class BeamSimulationZXY_hermite:
         snap = self.snaps_n[z_idx]
         I_n = snap[:, snap.shape[1] // 2]
 
-        fig, ax = plt.subplots(figsize=(8, 5))
-        ax.plot(x, I_n, color='red', label='$I(x, y=0) / I_0$')
+        if fig is None or ax is None:
+            fig, ax = plt.subplots(figsize=(8, 5))
+
+        ax.plot(x, I_n, label='$I(x, y=0) / I_0$')
         # ax.set_ylim(0, 10)
         ax.set_title(f'Intensity profile $I(x, y=0, z = {z_val:.3f})/I_0$, Pin={self.pin_factor}Pcr, artificial time')
         ax.set_xlabel('$x$ (m)')
@@ -337,10 +344,12 @@ class BeamSimulationZXY_hermite:
         
         ax.grid(True, alpha=0.3)
         plt.tight_layout()
-        self.save(fig, f'profile_x_z_{z_str}')
+        if save:
+            self.save(fig, f'profile_x_z_{z_str}')
         # plt.show()
+        return(fig, ax)
     
-    def profile_y(self, z: float):
+    def profile_y(self, z: float, fig=None, ax=None, save=True):
         z_idx = np.argmin(np.abs(self.snap_z - z))
         z_val = self.snap_z[z_idx]
         z_str = f'{z_val:.3f}'.replace('.', 'p')
@@ -348,8 +357,10 @@ class BeamSimulationZXY_hermite:
         snap = self.snaps_n[z_idx]
         I_n = snap[snap.shape[0] // 2, :]
 
-        fig, ax = plt.subplots(figsize=(8, 5))
-        ax.plot(y, I_n, color='red', label='$I(x=0, y) / I_0$')
+        if fig is None or ax is None:
+            fig, ax = plt.subplots(figsize=(8, 5))
+        
+        ax.plot(y, I_n, label='$I(x=0, y) / I_0$')
         # ax.set_ylim(0, 10)
         ax.set_title(f'Intensity profile $I(x=0, y, z = {z_val:.3f})/I_0$, Pin={self.pin_factor}Pcr, artificial time')
         ax.set_xlabel('$y$ (m)')
@@ -357,8 +368,10 @@ class BeamSimulationZXY_hermite:
         
         ax.grid(True, alpha=0.3)
         plt.tight_layout()
-        self.save(fig, f'profile_y_z_{z_str}')
+        if save:
+            self.save(fig, f'profile_y_z_{z_str}')
         # plt.show()
+        return(fig, ax)
 
     def profile_xy(self, z: float):
         z_idx = np.argmin(np.abs(self.snap_z - z))
