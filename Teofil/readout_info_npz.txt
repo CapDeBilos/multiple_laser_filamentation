@@ -73,6 +73,7 @@ np.savez_compressed(
 
 
 # FFT/zxt/square
+# same as gaussian
 
 
 # FD/zrt/plasma

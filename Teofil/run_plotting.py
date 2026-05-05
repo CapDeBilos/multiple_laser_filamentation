@@ -69,6 +69,24 @@ def run_ZXY_hermite(simulations_root: str, results_root: str, zs):
         #    '',
         #    np.arange(0.0, 4.0, 0.079611))
 
+def run_ZXT(simulations_root: str, results_root: str):
+    for dirpath, _, files in os.walk(simulations_root):
+        for file in files:
+            if file.endswith('.npz'):
+                filepath = os.path.join(dirpath, file)
+                print(f'Processing {filepath}...')
+                try:
+                    sim = BeamSimulationZXT(filepath, simulations_root, results_root)
+                    sim.on_axis_max_vs_z()
+                    print(f'Done with {filepath}')
+                except Exception as e:
+                    print(f'Error processing {filepath}: {e}')
+
+# gaussian or square
+# run_ZXT('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxt/',
+        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxt/')
+
+
 def run_ZRT(simulations_root: str, results_root: str):
     for dirpath, _, files in os.walk(simulations_root):
         for file in files:

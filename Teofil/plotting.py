@@ -445,3 +445,46 @@ class BeamSimulationZRT:
         ax.grid(True, alpha=0.3)
         plt.tight_layout()
         self.save(fig, 'max_I_vs_z')
+
+
+class BeamSimulationZXT:
+    def __init__(self, filepath: str, simulations_root: str, results_root: str):
+        self.load(filepath)
+        self.sim_dir   = os.path.dirname(os.path.abspath(filepath))
+        self.file_name = f'Pin_{self.pin_factor:4.1f}Pcr'.replace('.', 'p')
+        self.res_dir   = os.path.join(results_root, os.path.relpath(self.sim_dir, simulations_root), self.file_name)
+        os.makedirs(self.res_dir, exist_ok=True)
+
+    def load(self, filepath: str):
+        data                 = np.load(filepath, allow_pickle=True)
+        self.pin_factor      = data['pin_factor']
+        self.Pcr             = data['Pcr']
+        self.z_diag          = data['z_diag']
+        self.I_peak          = data['I_peak'].item()       # scalar
+        self.I_center_tmax   = data['I_center_tmax']       # 1d array over z
+        self.DeltaZ_diag     = data['DeltaZ_diag']
+        self.Nx_diag         = data['Nx_diag']
+        self.Nt_diag         = data['Nt_diag']
+        self.x_cpu           = data['x']
+        self.t_cpu           = data['t']
+        self.I_final         = data['I_final']
+        self.I_center_tmax_n = self.I_center_tmax / self.I_peak   # normalize by initial peak
+
+    def save(self, fig, name: str):
+        fig.savefig(os.path.join(self.res_dir, f'{name}.pdf'), dpi=150)
+        plt.close(fig)
+    
+    def on_axis_max_vs_z(self):
+        fig, ax = plt.subplots(figsize=(8, 5))
+        try:
+            ax.plot(self.z_diag, self.I_center_tmax_n, color='green', label='$I(x=0, t_{max}) / I_0$')
+            ax.set_title(f'$I(x=0, t_{{max}}, z)/I_0$, Pin={self.pin_factor}Pcr')
+            ax.set_xlabel('$z$ (m)')
+            ax.set_ylabel('$|I/I_0|$ (1)')
+            ax.legend()
+            ax.grid(True, alpha=0.3)
+            plt.tight_layout()
+            self.save(fig, 'max_I_vs_z')
+        except Exception as e:
+            plt.close(fig)
+            raise e
