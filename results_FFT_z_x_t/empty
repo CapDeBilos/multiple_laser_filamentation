@@ -1,7 +1,0 @@
-The results in this folder concern the simulation of the envelope of the electric field E and of the plasma electron density rho
-
-To simulate the results, we proceeded as follows. The coordinate system was z, x, and t. 
-
-Then we applied the FFT Strang split scheme. 
-
-And then we did a sweep from Pin = 0.1 * Pcr to 20 * Pcr, with increments of 0.1 * Pcr
