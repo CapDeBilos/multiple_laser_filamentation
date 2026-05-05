@@ -60,8 +60,8 @@ def run_ZXY_hermite(simulations_root: str, results_root: str, zs):
                 except Exception as e:
                     print(f'Error processing {filepath}: {e}')
 
-# run_ZXY_hermite('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/hermite_2_1/',
-        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxt/hermite_2_1/',
+# run_ZXY_hermite('',
+        #    '',
         #    np.arange(0.0, 4.0, 0.079611))
 
 ########## Some tests
