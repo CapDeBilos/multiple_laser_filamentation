@@ -69,7 +69,7 @@ class BeamSimulationZXY:
         self.save(fig, f'max_I_vs_z')
         # plt.show()
     
-    def profile_x(self, z: float, fig=None, ax=None):
+    def profile_x(self, z: float, fig=None, ax=None, save=True):
         z_idx = np.argmin(np.abs(self.snap_z - z))
         z_val = self.snap_z[z_idx]
         z_str = f'{z_val:.3f}'.replace('.', 'p')
@@ -88,7 +88,9 @@ class BeamSimulationZXY:
         
         ax.grid(True, alpha=0.3)
         plt.tight_layout()
-        self.save(fig, f'profile_x_z_{z_str}')
+
+        if save:
+            self.save(fig, f'profile_x_z_{z_str}')
         # plt.show()
         return(fig, ax)
     
