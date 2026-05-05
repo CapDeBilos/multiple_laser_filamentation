@@ -1,0 +1,53 @@
+# FFT/zxy/gaussian/no_noise
+np.savez(
+        npz_path,
+        pin_factor=pin_factor,
+        Pcr=Pcr,
+        z_diag=np.array(z_diag), # this is a 1d array that contains the values of z at which a cheap diagnostic was made
+        I_peak=np.array(I_peak),
+        I_center=np.array(I_center),
+        rho_peak=np.array(rho_peak),
+        DeltaZ_diag=np.array(dz_diag),
+        Nx_diag=np.array(Nx_diag),
+        Ny_diag=np.array(Ny_diag),
+        I_snapshot_z=np.array(I_snapshot_z), # this is a 1d array that contains the values of z at which an expensive diagnostic was made
+        I_snapshot_steps=np.array(I_snapshot_steps), # this is a 1d array that contains the loop interation index at which an expensive diagnostic was made
+        I_snapshot_Nx=np.array(I_snapshot_Nx), # this is a 1d array that contains the number of cells along the x axis when an expensive diagnostic was made
+        I_snapshot_Ny=np.array(I_snapshot_Ny), # this is a 1d array that contains the number of cells along the y axis when an expensive diagnostic was made
+        I_snapshot_x=as_object_array(I_snapshot_x), # this is a 2d array that contains the x_vector 
+        I_snapshot_y=as_object_array(I_snapshot_y), # this is a 2d array that contains the y_vector
+        I_snapshots=as_object_array(I_snapshots), # this is a 3d array, important, it contains the beam profile I(x, y) when an expensive diagnostic was made,
+        # to make the plot of I(x, y) vs. z, make a heatmap of I_snapshots at a given z
+        full_I_save_every=full_I_save_every, # this is a 0d array, i.e, a number
+        x=x_cpu, # not important
+        y=y_cpu, # not important
+        I_final=I_final, # not important
+        rho_final=rho_final, # not important
+    )
+
+# FFT/zxy/gaussian/noise
+np.savez_compressed(
+        npz_path,
+        pin_factor=pin_factor,
+        Pcr=Pcr,
+        z_diag=np.array(z_diag), # this is a 1d array
+        I_peak=np.array(I_peak), # this is a 1d array
+        I_center=np.array(I_center), # this is a 1d array
+        rho_peak=np.array(rho_peak), # this is a  1d array 
+        DeltaZ_diag=np.array(dz_diag), # this is a 1d array
+        Nx_diag=np.array(Nx_diag), # this is a 1d array
+        Ny_diag=np.array(Ny_diag), # this is a 1d array
+        x=x_cpu, # etc
+        y=y_cpu,
+        I_final=I_final,
+        rho_final=rho_final,
+        NOISE_ON=NOISE_ON,
+        NOISE_SEED=NOISE_SEED,
+        MULTIPLICATIVE_NOISE_ON=MULTIPLICATIVE_NOISE_ON,
+        amp_noise_rms=amp_noise_rms,
+        PHASE_NOISE_ON=PHASE_NOISE_ON,
+        phase_noise_rms=phase_noise_rms,
+        noise_corr_x_factor=noise_corr_x_factor,
+        noise_corr_y_factor=noise_corr_y_factor,
+        amp_noise_clip_sigma=np.nan if amp_noise_clip_sigma is None else amp_noise_clip_sigma,
+    )
