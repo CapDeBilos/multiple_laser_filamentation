@@ -23,7 +23,7 @@ def run_ZXY(simulations_root: str, results_root: str, zs):
 
 # run_ZXY('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/noise/',
         #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/noise/',
-        #    np.arange(0.0, 4.0, 0.0.079611))
+        #    np.arange(0.0, 4.0, 0.079611))
 
 def run_ZXY_Noise(simulations_root: str, results_root: str):
     for dirpath, _, files in os.walk(simulations_root):
@@ -41,12 +41,36 @@ def run_ZXY_Noise(simulations_root: str, results_root: str):
 # run_ZXY_Noise('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/noise/',
         #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/noise/') 
 
+def run_ZXY_hermite(simulations_root: str, results_root: str, zs):
+    for dirpath, _, files in os.walk(simulations_root):
+        for file in files:
+            if file.endswith('.npz'):
+                filepath = os.path.join(dirpath, file)
+                print(f'Processing {filepath}...')
+                try:
+                    sim = BeamSimulationZXY_hermite(filepath, simulations_root, results_root)
+                    sim.on_axis_max_vs_z()
+                    sim.profile_zx()
+                    sim.profile_zy()
+                    for z in zs:
+                        sim.profile_x(z)
+                        sim.profile_y(z)
+                        sim.profile_xy(z)
+                    print(f'Done with {filepath}')
+                except Exception as e:
+                    print(f'Error processing {filepath}: {e}')
+
+# run_ZXY_hermite('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/hermite_2_1/',
+        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxt/hermite_2_1/',
+        #    np.arange(0.0, 4.0, 0.079611))
+
 ########## Some tests
-sim_test = BeamSimulationZXY('/home/teofil/Desktop/Eldyn_sims/test/Pin_014p0_Pcr_square_4D_FFT_diagnostics.npz', '/home/teofil/Desktop/Eldyn_sims/test/', '/home/teofil/Desktop/Eldyn_sims/test/')
+# sim_test = BeamSimulationZXY_hermite('/home/teofil/Desktop/Eldyn_sims/test/Pin_014p0_Pcr_Hermite_4D_FFT_diagnostics.npz', '/home/teofil/Desktop/Eldyn_sims/test/', '/home/teofil/Desktop/Eldyn_sims/test/')
 # sim_test.on_axis_max_vs_z()
-print(sim_test.snap_z)
-# sim_test.profile_xz()
-# sim_test.profile_xy(0.4)
+# print(sim_test.snap_z)
+# sim_test.profile_zx()
+# sim_test.profile_zy()
+# sim_test.profile_xy(1.5)
 # for z in sim_test.snap_z:
     # sim_test.profile_xy(z)
 # sim_test.profile_x(0.5)
