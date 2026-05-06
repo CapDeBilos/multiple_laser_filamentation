@@ -6,7 +6,7 @@ from plotting import *
 def run_ZXY(simulations_root: str, results_root: str, zs):
     for dirpath, _, files in os.walk(simulations_root):
         for file in files:
-            if file.endswith('01p2_Pcr_gaussian_4D_FFT_diagnostics.npz'):
+            if file.endswith('_001p5_Pcr_gaussian_4D_FFT_diagnostics.npz'):
                 filepath = os.path.join(dirpath, file)
                 print(f'Processing {filepath}...')
                 try:
@@ -157,7 +157,7 @@ def manual2(pin_factor, zs):
     sim.save(fig, 'profile_x_sweep_z')
 
 
-manual1(pin_factor=1.2, zs=[0.239, 0.955, 1.194, 1.433])
+manual1(pin_factor=1.5, zs=[0.239, 0.955, 1.194, 1.433])
 # manual2(pin_factor=20.0, zs=[0.159, 0.318, 0.955])
 
 
