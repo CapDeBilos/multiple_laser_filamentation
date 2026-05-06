@@ -6,14 +6,14 @@ from plotting import *
 def run_ZXY(simulations_root: str, results_root: str, zs):
     for dirpath, _, files in os.walk(simulations_root):
         for file in files:
-            if file.endswith('.npz'):
+            if file.endswith('01p2_Pcr_gaussian_4D_FFT_diagnostics.npz'):
                 filepath = os.path.join(dirpath, file)
                 print(f'Processing {filepath}...')
                 try:
                     sim = BeamSimulationZXY(filepath, simulations_root, results_root)
-                    # sim.on_axis_max_vs_z()
-                    # sim.profile_zx()
-                    # sim.profile_zy()
+                    sim.on_axis_max_vs_z()
+                    sim.profile_zx()
+                    sim.profile_zy()
                     # for z in zs:
                     sim.profile_xy(0.0)
                         # sim.profile_x(z)
@@ -89,18 +89,18 @@ run_ZXY('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/'
            np.arange(0.0, 4.0, 0.079611))
 
 # square
-run_ZXY('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/square/',
-           '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/square/',
-           np.arange(0.0, 4.0, 0.159222)) # 3 * 0.079611
+# run_ZXY('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/square/',
+        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/square/',
+        #    np.arange(0.0, 4.0, 0.159222)) # 3 * 0.079611
 
 # gaussian with noise
 # run_ZXY_Noise('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/noise/',
         #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/noise/') 
 
 # hermite
-run_ZXY_hermite('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/hermite_2_1/',
-           '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/hermite_2_1/',
-           np.arange(0.0, 4.0, 0.079611))
+# run_ZXY_hermite('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/hermite_2_1/',
+        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/hermite_2_1/',
+        #    np.arange(0.0, 4.0, 0.079611))
 
 # XZT gaussian or square
 # run_ZXT('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxt/',
@@ -157,7 +157,7 @@ def manual2(pin_factor, zs):
     sim.save(fig, 'profile_x_sweep_z')
 
 
-# manual1(pin_factor=12.0, zs=[0.239, 0.955, 1.194, 1.433])
+manual1(pin_factor=1.2, zs=[0.239, 0.955, 1.194, 1.433])
 # manual2(pin_factor=20.0, zs=[0.159, 0.318, 0.955])
 
 
