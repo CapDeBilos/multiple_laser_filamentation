@@ -121,20 +121,33 @@ def run_ZRT(simulations_root: str, results_root: str):
 # print(np.size(sim_test.snap_z))
 
 ########## Manual plotting
-def manual1(pin_factor):
+def manual1(pin_factor, zs):
     pin_str = f"{pin_factor:05.1f}".replace(".", "p")
     sim = BeamSimulationZXY(f'/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/many_diags/Pin_{pin_str}_Pcr_gaussian_4D_FFT_diagnostics.npz',
                             '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/many_diags/',
-                            '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/no_noise/many_diags/_manual')
+                            '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/no_noise/many_diags/a_manual')
     fig, ax = sim.profile_x(z=0, save=False)
-    for z in [0.239, 0.955, 1.194, 1.433]: # np.arange(0.239, 1.435, 0.239)
+    for z in zs: # np.arange(0.239, 1.435, 0.239)
+        fig, ax = sim.profile_x(z, fig=fig, ax=ax, save=False)
+    ax.set_title(f'Intensity profile $I(x, y=0, z)/I_0$, Pin={sim.pin_factor}Pcr, artificial time')
+    ax.legend()
+    sim.save(fig, 'profile_x_many_z')
+
+def manual2(pin_factor, zs):
+    pin_str = f"{pin_factor:05.1f}".replace(".", "p")
+    sim = BeamSimulationZXY(f'/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/square/Pin_{pin_str}_Pcr_square_4D_FFT_diagnostics.npz',
+                            '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/square',
+                            '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/square/a_manual')
+    fig, ax = sim.profile_x(z=0, save=False)
+    for z in zs: # np.arange(0.239, 1.435, 0.239)
         fig, ax = sim.profile_x(z, fig=fig, ax=ax, save=False)
     ax.set_title(f'Intensity profile $I(x, y=0, z)/I_0$, Pin={sim.pin_factor}Pcr, artificial time')
     ax.legend()
     sim.save(fig, 'profile_x_many_z')
 
 
-manual1(12.0)
+manual1(12.0, [0.239, 0.955, 1.194, 1.433])
+
 
 # plot all files in all the dirs in a list of paths
 '''
