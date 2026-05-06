@@ -51,7 +51,8 @@ class BeamSimulationZXY:
         # self.I0_n_fft       = np.abs(np.fft.fft2(self.snaps[0])).max() # the max intensity of the spectrum at z=0, not a good method
 
     def save(self, fig, name: str):
-        fig.savefig(os.path.join(self.res_dir, f'{name}.pdf'), dpi=150)
+        fig.savefig(os.path.join(self.res_dir, f'{name}.pdf'), dpi=150, bbox_inches="tight")
+        fig.savefig(os.path.join(self.res_dir, f'{name}.png'), dpi=150, bbox_inches="tight")
         plt.close(fig)
 
     def on_axis_max_vs_z(self):
@@ -251,7 +252,8 @@ class BeamSimulationZXY_Noise:
         self.I_center_n              = self.I_center / self.I_peak[0]
 
     def save(self, fig, name: str):
-        fig.savefig(os.path.join(self.res_dir, f'{name}.pdf'), dpi=150)
+        fig.savefig(os.path.join(self.res_dir, f'{name}.pdf'), dpi=150, bbox_inches="tight")
+        fig.savefig(os.path.join(self.res_dir, f'{name}.png'), dpi=150, bbox_inches="tight")
         plt.close(fig)
 
     def on_axis_max_vs_z(self):
@@ -307,7 +309,8 @@ class BeamSimulationZXY_hermite:
         # self.I0_n_fft       = np.abs(np.fft.fft2(self.snaps[0])).max() # the max intensity of the spectrum at z=0, not a good method
 
     def save(self, fig, name: str):
-        fig.savefig(os.path.join(self.res_dir, f'{name}.pdf'), dpi=150)
+        fig.savefig(os.path.join(self.res_dir, f'{name}.pdf'), dpi=150, bbox_inches="tight")
+        fig.savefig(os.path.join(self.res_dir, f'{name}.png'), dpi=150, bbox_inches="tight")
         plt.close(fig)
 
     def on_axis_max_vs_z(self):
@@ -448,7 +451,8 @@ class BeamSimulationZRT:
         self.I_ratio     = data['I_ratio']
 
     def save(self, fig, name: str):
-        fig.savefig(os.path.join(self.res_dir, f'{name}.pdf'), dpi=150)
+        fig.savefig(os.path.join(self.res_dir, f'{name}.pdf'), dpi=150, bbox_inches="tight")
+        fig.savefig(os.path.join(self.res_dir, f'{name}.png'), dpi=150, bbox_inches="tight")
         plt.close(fig)
 
     def on_axis_max_vs_z(self):
@@ -489,7 +493,8 @@ class BeamSimulationZXT:
         self.I_center_tmax_n = self.I_center_tmax / self.I_peak   # normalize by initial peak
 
     def save(self, fig, name: str):
-        fig.savefig(os.path.join(self.res_dir, f'{name}.pdf'), dpi=150)
+        fig.savefig(os.path.join(self.res_dir, f'{name}.pdf'), dpi=150, bbox_inches="tight")
+        fig.savefig(os.path.join(self.res_dir, f'{name}.png'), dpi=150, bbox_inches="tight")
         plt.close(fig)
     
     def on_axis_max_vs_z(self):

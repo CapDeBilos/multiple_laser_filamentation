@@ -14,22 +14,13 @@ def run_ZXY(simulations_root: str, results_root: str, zs):
                     sim.on_axis_max_vs_z()
                     sim.profile_zx()
                     sim.profile_zy()
-                    for z in zs:
-                        sim.profile_x(z)
-                        sim.profile_y(z)
-                        sim.profile_xy(z)
+                    # for z in zs:
+                        # sim.profile_x(z)
+                        # sim.profile_y(z)
+                        # sim.profile_xy(z)
                     print(f'Done with {filepath}')
                 except Exception as e:
                     print(f'Error processing {filepath}: {e}')
-# gaussian
-# run_ZXY('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/many_diags_low_pin/',
-        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/no_noise/many_diags_low_pin/',
-        #    np.arange(0.0, 4.0, 0.079611))
-
-# square
-# run_ZXY('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/square/',
-        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/square/',
-        #    np.arange(0.0, 4.0, 0.159222)) # 3 * 0.079611
 
 def run_ZXY_Noise(simulations_root: str, results_root: str):
     for dirpath, _, files in os.walk(simulations_root):
@@ -44,9 +35,6 @@ def run_ZXY_Noise(simulations_root: str, results_root: str):
                 except Exception as e:
                     print(f'Error processing {filepath}: {e}')
 
-# run_ZXY_Noise('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/noise/',
-        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/noise/') 
-
 def run_ZXY_hermite(simulations_root: str, results_root: str, zs):
     for dirpath, _, files in os.walk(simulations_root):
         for file in files:
@@ -58,17 +46,13 @@ def run_ZXY_hermite(simulations_root: str, results_root: str, zs):
                     sim.on_axis_max_vs_z()
                     sim.profile_zx()
                     sim.profile_zy()
-                    for z in zs:
-                        sim.profile_x(z)
-                        sim.profile_y(z)
-                        sim.profile_xy(z)
+                    # for z in zs:
+                        # sim.profile_x(z)
+                        # sim.profile_y(z)
+                        # sim.profile_xy(z)
                     print(f'Done with {filepath}')
                 except Exception as e:
                     print(f'Error processing {filepath}: {e}')
-
-# run_ZXY_hermite('',
-        #    '',
-        #    np.arange(0.0, 4.0, 0.079611))
 
 def run_ZXT(simulations_root: str, results_root: str):
     for dirpath, _, files in os.walk(simulations_root):
@@ -83,11 +67,6 @@ def run_ZXT(simulations_root: str, results_root: str):
                 except Exception as e:
                     print(f'Error processing {filepath}: {e}')
 
-# gaussian or square
-# run_ZXT('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxt/',
-        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxt/')
-
-
 def run_ZRT(simulations_root: str, results_root: str):
     for dirpath, _, files in os.walk(simulations_root):
         for file in files:
@@ -100,10 +79,36 @@ def run_ZRT(simulations_root: str, results_root: str):
                     print(f'Done with {filepath}')
                 except Exception as e:
                     print(f'Error processing {filepath}: {e}')
+
+
+# gaussian
+# run_ZXY('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/',
+        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/no_noise/',
+        #    np.arange(0.0, 4.0, 0.079611))
+
+# square
+# run_ZXY('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/square/',
+        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/square/',
+        #    np.arange(0.0, 4.0, 0.159222)) # 3 * 0.079611
+
+# gaussian with noise
+# run_ZXY_Noise('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/noise/',
+        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/noise/') 
+
+# hermite
+# run_ZXY_hermite('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/hermite_2_1/',
+        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/hermite_2_1/',
+        #    np.arange(0.0, 4.0, 0.079611))
+
+# XZT gaussian or square
+# run_ZXT('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxt/',
+        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxt/')
+
 # gaussian, plasma
 # run_ZRT('/home/teofil/Desktop/Eldyn_sims/Simulations/FD/zrt/',
         #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FD/zrt/')
-           
+
+
 ########## Some tests
 # sim_test = BeamSimulationZXY_hermite('/home/teofil/Desktop/Eldyn_sims/test/Pin_014p0_Pcr_Hermite_4D_FFT_diagnostics.npz', '/home/teofil/Desktop/Eldyn_sims/test/', '/home/teofil/Desktop/Eldyn_sims/test/')
 # sim_test.on_axis_max_vs_z()
@@ -120,6 +125,9 @@ def run_ZRT(simulations_root: str, results_root: str):
 # print(sim_test.snap_z)
 # print(np.size(sim_test.snap_z))
 
+
+
+
 ########## Manual plotting
 def manual1(pin_factor, zs):
     pin_str = f"{pin_factor:05.1f}".replace(".", "p")
@@ -131,7 +139,7 @@ def manual1(pin_factor, zs):
         fig, ax = sim.profile_x(z, fig=fig, ax=ax, save=False)
     ax.set_title(f'Intensity profile $I(x, y=0, z)/I_0$, Pin={sim.pin_factor}Pcr, artificial time')
     ax.legend()
-    sim.save(fig, 'profile_x_many_z')
+    sim.save(fig, 'profile_x_sweep_z')
 
 def manual2(pin_factor, zs):
     pin_str = f"{pin_factor:05.1f}".replace(".", "p")
@@ -144,11 +152,11 @@ def manual2(pin_factor, zs):
     ax.set_xlim(-0.002, 0.002)
     ax.set_title(f'Intensity profile $I(x, y=0, z)/I_0$, Pin={sim.pin_factor}Pcr, artificial time')
     ax.legend()
-    sim.save(fig, 'profile_x_many_z')
+    sim.save(fig, 'profile_x_sweep_z')
 
 
 # manual1(pin_factor=12.0, zs=[0.239, 0.955, 1.194, 1.433])
-manual2(pin_factor=20.0, zs=[0.159, 0.318, 0.955])
+# manual2(pin_factor=20.0, zs=[0.159, 0.318, 0.955])
 
 
 # plot all files in all the dirs in a list of paths
