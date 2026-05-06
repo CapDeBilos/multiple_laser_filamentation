@@ -22,9 +22,9 @@ def run_ZXY(simulations_root: str, results_root: str, zs):
                 except Exception as e:
                     print(f'Error processing {filepath}: {e}')
 # gaussian
-run_ZXY('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/many_diags_low_pin/',
-           '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/no_noise/many_diags_low_pin/',
-           np.arange(0.0, 4.0, 0.079611))
+# run_ZXY('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/many_diags_low_pin/',
+        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/no_noise/many_diags_low_pin/',
+        #    np.arange(0.0, 4.0, 0.079611))
 
 # square
 # run_ZXY('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/square/',
@@ -121,14 +121,15 @@ def run_ZRT(simulations_root: str, results_root: str):
 # print(np.size(sim_test.snap_z))
 
 ########## Manual plotting
-def manual1():
-    sim = BeamSimulationZXY('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/many_diags/Pin_006p5_Pcr_gaussian_4D_FFT_diagnostics.npz',
+def manual1(pin_factor):
+    pin_str = f"{pin_factor:05.1f}".replace(".", "p")
+    sim = BeamSimulationZXY(f'/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/many_diags/Pin_{pin_str}_Pcr_gaussian_4D_FFT_diagnostics.npz',
                             '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/many_diags/',
-                            '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/no_noise/many_diags/Pin_ 6p5Pcr/_manual')
+                            '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/no_noise/many_diags/_manual')
     fig, ax = sim.profile_x(z=0, save=False)
-    for z in [0.239, 0.478, 0.716, 0.955]:
+    for z in [0.239, 0.955, 1.194, 1.433]: # np.arange(0.239, 1.435, 0.239)
         fig, ax = sim.profile_x(z, fig=fig, ax=ax, save=False)
-    ax.set_title(f'Intensity profile $I(x, y=0, z)/I_0$, Pin=6.5Pcr, artificial time')
+    ax.set_title(f'Intensity profile $I(x, y=0, z)/I_0$, Pin={sim.pin_factor}Pcr, artificial time')
     ax.legend()
     sim.save(fig, 'profile_x_many_z')
 
@@ -143,7 +144,7 @@ def manual2():
     ax.legend()
     sim.save(fig, 'profile_x_many_z')
 
-def manual2():
+def manual3():
     sim = BeamSimulationZXY('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/square/',
                             '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/square/',
                             '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/square/')
@@ -155,7 +156,7 @@ def manual2():
     sim.save(fig, 'profile_x_many_z')
 
 
-# manual1()
+manual1(2.0)
 # manual2()
 
 # plot all files in all the dirs in a list of paths
