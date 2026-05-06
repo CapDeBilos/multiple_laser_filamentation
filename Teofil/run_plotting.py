@@ -131,7 +131,20 @@ def manual1():
     ax.legend()
     sim.save(fig, 'profile_x_many_z')
 
-manual1()
+def manual2():
+    sim = BeamSimulationZXY('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/many_diags/Pin_000p5_Pcr_gaussian_4D_FFT_diagnostics.npz',
+                            '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/many_diags/',
+                            '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/no_noise/many_diags/_manual')
+    fig, ax = sim.profile_x(z=0, save=False)
+    for z in np.arange(0.239, 1.435, 0.239):
+        fig, ax = sim.profile_x(z, fig=fig, ax=ax, save=False)
+    ax.set_title(f'Intensity profile $I(x, y=0, z)/I_0$, Pin=0.5Pcr, artificial time')
+    ax.legend()
+    sim.save(fig, 'profile_x_many_z')
+
+
+# manual1()
+manual2()
 
 # plot all files in all the dirs in a list of paths
 '''

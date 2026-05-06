@@ -72,7 +72,7 @@ class BeamSimulationZXY:
     def profile_x(self, z: float, fig=None, ax=None, save=True):
         z_idx = np.argmin(np.abs(self.snap_z - z))
         z_val = self.snap_z[z_idx]
-        z_str = f'{z_val:.3f}'.replace('.', 'p')
+        z_str = f'{z_val:.3f}m'.replace('.', 'p')
         x = self.snap_x[z_idx]
         snap = self.snaps_n[z_idx]
         I_n = snap[:, snap.shape[1] // 2]
@@ -80,9 +80,9 @@ class BeamSimulationZXY:
         if fig is None or ax is None:
             fig, ax = plt.subplots(figsize=(8, 5))
 
-        ax.plot(x, I_n, label=f'$I(x, y=0, z={z_val:5.3f}) / I_0$')
+        ax.plot(x, I_n, label=f'$I(x, y=0, z={z_val:5.3f}m) / I_0$')
         # ax.set_ylim(0, 10)
-        ax.set_title(f'Intensity profile $I(x, y=0, z = {z_val:.3f})/I_0$, Pin={self.pin_factor}Pcr, artificial time')
+        ax.set_title(f'Intensity profile $I(x, y=0, z = {z_val:.3f}m)/I_0$, Pin={self.pin_factor}Pcr, artificial time')
         ax.set_xlabel('$x$ (m)')
         ax.set_ylabel('$|I/I_0|$ (1)')
         
@@ -121,7 +121,7 @@ class BeamSimulationZXY:
     def profile_xy(self, z: float):
         z_idx = np.argmin(np.abs(self.snap_z - z))
         z_val = self.snap_z[z_idx]
-        z_str = f'{z_val:.3f}'.replace('.', 'p')
+        z_str = f'{z_val:.3f}m'.replace('.', 'p')
         I_n = self.snaps_n[z_idx].T # because imshow treats array as (rows, cols) = (y, x)
 
         fig, ax = plt.subplots(figsize=(8, 5))
@@ -129,7 +129,7 @@ class BeamSimulationZXY:
         c = ax.imshow(I_n, cmap='hot', aspect='equal', # vmin=0, vmax=5,
                 extent=[self.snap_x[z_idx][0], self.snap_x[z_idx][-1], self.snap_y[z_idx][0], self.snap_y[z_idx][-1]],
                 origin='lower')
-        ax.set_title(f'Intensity profile $I(x, y, z = {z_val:.3f})/I_0$, Pin={self.pin_factor}Pcr, artificial time')
+        ax.set_title(f'Intensity profile $I(x, y, z = {z_val:.3f}m)/I_0$, Pin={self.pin_factor}Pcr, artificial time')
         fig.colorbar(c, ax=ax, label='$|I/I_0|$ (1)', fraction=0.046, pad=0.04)
         ax.set_xlabel('$x$ (m)')
         ax.set_ylabel('$y$ (m)')
