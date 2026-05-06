@@ -2,7 +2,6 @@ from plotting import *
 
 ########## Run the code on real data
 # run the plots for all subdirs of the Simulations directory, saving automatically to the Results directory
-# this works for zxy gaussian and zxy square
 def run_ZXY(simulations_root: str, results_root: str, zs):
     for dirpath, _, files in os.walk(simulations_root):
         for file in files:
@@ -84,9 +83,9 @@ def run_ZRT(simulations_root: str, results_root: str):
 
 
 # gaussian
-run_ZXY('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/',
-           '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/no_noise/',
-           np.arange(0.0, 4.0, 0.079611))
+# run_ZXY('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/',
+        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/no_noise/',
+        #    np.arange(0.0, 4.0, 0.079611))
 
 # square
 # run_ZXY('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/square/',
@@ -131,7 +130,7 @@ run_ZXY('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/'
 
 
 ########## Manual plotting
-def manual1(pin_factor, zs):
+def compare_profile_x_gaussian(pin_factor, zs):
     pin_str = f"{pin_factor:05.1f}".replace(".", "p")
     sim = BeamSimulationZXY(f'/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/many_diags/Pin_{pin_str}_Pcr_gaussian_4D_FFT_diagnostics.npz',
                             '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/many_diags/',
@@ -143,7 +142,7 @@ def manual1(pin_factor, zs):
     ax.legend()
     sim.save(fig, 'profile_x_sweep_z')
 
-def manual2(pin_factor, zs):
+def compare_profile_x_square(pin_factor, zs):
     pin_str = f"{pin_factor:05.1f}".replace(".", "p")
     sim = BeamSimulationZXY(f'/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/square/Pin_{pin_str}_Pcr_square_4D_FFT_diagnostics.npz',
                             '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/square',
@@ -156,10 +155,50 @@ def manual2(pin_factor, zs):
     ax.legend()
     sim.save(fig, 'profile_x_sweep_z')
 
+def compare_on_axis_max_vs_z(sims: list, res_dir: str, name: str = 'compare_max_I_vs_z'):
+    """
+    Parameters
+    ----------
+    sims     : list of BeamSimulationZXY or BeamSimulationZXY_Noise instances
+    res_dir  : directory where the combined figure is saved
+    name     : filename (without extension)
+    """
+    fig, ax = plt.subplots(figsize=(10, 6))
 
-for pin_factor in [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]:
-    manual1(pin_factor, zs=[0.239, 0.955, 1.194, 1.433])
-# manual2(pin_factor=20.0, zs=[0.159, 0.318, 0.955])
+    for sim in sims:
+        fig, ax = sim.plot_on_axis_max_vs_z(fig=fig, ax=ax, save=False)
+
+    ax.set_title('$I_{max}$ and $I_{r=0}$ vs $z$, comparison')
+    ax.legend()
+    plt.tight_layout()
+
+    os.makedirs(res_dir, exist_ok=True)
+    fig.savefig(os.path.join(res_dir, f'{name}.pdf'), dpi=150, bbox_inches="tight")
+    fig.savefig(os.path.join(res_dir, f'{name}.png'), dpi=150, bbox_inches="tight")
+    plt.close(fig)
+
+
+# for pin_factor in [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]:
+    # compare_profile_x_gaussian(pin_factor, zs=[0.239, 0.955, 1.194, 1.433])
+# compare_profile_x_square(pin_factor=20.0, zs=[0.159, 0.318, 0.955])
+
+# '''
+sim_clean = BeamSimulationZXY(
+    '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/many_diags/Pin_005p0_Pcr_gaussian_4D_FFT_diagnostics.npz',
+    '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/many_diags/',
+    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/a_manual/'
+)
+sim_noisy = BeamSimulationZXY_Noise(
+    '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/noise/Pin_005p0_Pcr_xy_no_t_memory_optimized_noise.npz',
+    '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/noise/',
+    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/a_manual/'
+)
+compare_on_axis_max_vs_z(
+    sims=[sim_clean, sim_noisy],
+    res_dir='/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/a_manual/',
+    name='compare_5p0Pcr'
+)
+# '''
 
 
 # plot all files in all the dirs in a list of paths

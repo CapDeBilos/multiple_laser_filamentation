@@ -1,0 +1,27 @@
+ # Launch simulations
+
+ chmod +x launcher.sh
+./launcher.sh
+
+
+
+# Check progress
+
+while read m; do
+  echo "===== $m ====="
+  ssh teofil.voicu@$m '
+    tmux ls 2>/dev/null || echo "no tmux";
+    cd ~/Documents/S4_ELDYN/gaussian_4D_FFT_run &&
+    grep "Pin/Pcr=" logs/gaussian_Pin_*p*_Pcr.log 2>/dev/null | tail -n 1
+  '
+done < machines.txt
+
+
+
+# Download results
+
+mkdir -p ~/gaussian_results
+
+rsync -av --progress \
+  teofil.voicu@cher.polytechnique.fr:~/Documents/S4_ELDYN/gaussian_4D_FFT_run/gaussian_4D_FFT/ \
+  ~/gaussian_results/

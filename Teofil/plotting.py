@@ -50,25 +50,37 @@ class BeamSimulationZXY:
         self.snaps_n        = np.array([snap / self.I_peak[0] for snap in self.snaps])
         # self.I0_n_fft       = np.abs(np.fft.fft2(self.snaps[0])).max() # the max intensity of the spectrum at z=0, not a good method
 
-    def save(self, fig, name: str):
-        fig.savefig(os.path.join(self.res_dir, f'{name}.pdf'), dpi=150, bbox_inches="tight")
-        fig.savefig(os.path.join(self.res_dir, f'{name}.png'), dpi=150, bbox_inches="tight")
+    def save(self, fig, name: str, res_dir: str = None):
+        out = res_dir if res_dir is not None else self.res_dir
+        os.makedirs(out, exist_ok=True)
+        fig.savefig(os.path.join(out, f'{name}.pdf'), dpi=150, bbox_inches="tight")
+        fig.savefig(os.path.join(out, f'{name}.png'), dpi=150, bbox_inches="tight")
         plt.close(fig)
 
-    def on_axis_max_vs_z(self):
-        fig, ax = plt.subplots(figsize=(8, 5))
-        ax.plot(self.z_diag, self.I_peak_n, color='green', label='$I_{max} / I_0$')
-        ax.plot(self.z_diag, self.I_center_n, color='blue', label='$I_{r=0} / I_0$')
+    def plot_on_axis_max_vs_z(self, fig=None, ax=None, save=True, res_dir=None):
+        if fig is None or ax is None:
+            fig, ax = plt.subplots(figsize=(8, 5))
 
-        ax.set_title(f'$I_{{max}}(x=0, y=0, z)/I_0$, Pin={self.pin_factor}Pcr, artificial time')
+        label_peak   = f'$I_{{max}}/I_0$, Pin={self.pin_factor:.1f}Pcr'
+        label_center = f'$I_{{r=0}}/I_0$, Pin={self.pin_factor:.1f}Pcr'
+        ax.plot(self.z_diag, self.I_peak_n,   label=label_peak)
+        ax.plot(self.z_diag, self.I_center_n, label=label_center, linestyle='--')
+
         ax.set_xlabel('$z$ (m)')
-        ax.set_ylabel('$|I_{{max}}/I_0|$ (1)')
-        ax.legend()
-
+        ax.set_ylabel('$I/I_0$ (1)')
         ax.grid(True, alpha=0.3)
-        plt.tight_layout()
-        self.save(fig, f'max_I_vs_z')
-        # plt.show()
+
+        if save:
+            ax.set_title(f'$I_{{max}}$ vs $z$, Pin={self.pin_factor:.1f}Pcr, artificial time')
+            ax.legend()
+            plt.tight_layout()
+            self.save(fig, 'max_I_vs_z', res_dir=res_dir)
+
+        return fig, ax
+
+    def on_axis_max_vs_z(self):
+        self.plot_on_axis_max_vs_z()
+    
     
     def profile_x(self, z: float, fig=None, ax=None, save=True):
         z_idx = np.argmin(np.abs(self.snap_z - z))
@@ -251,24 +263,36 @@ class BeamSimulationZXY_Noise:
         self.I_peak_n                = self.I_peak / self.I_peak[0]
         self.I_center_n              = self.I_center / self.I_peak[0]
 
-    def save(self, fig, name: str):
-        fig.savefig(os.path.join(self.res_dir, f'{name}.pdf'), dpi=150, bbox_inches="tight")
-        fig.savefig(os.path.join(self.res_dir, f'{name}.png'), dpi=150, bbox_inches="tight")
+    def save(self, fig, name: str, res_dir: str = None):
+        out = res_dir if res_dir is not None else self.res_dir
+        os.makedirs(out, exist_ok=True)
+        fig.savefig(os.path.join(out, f'{name}.pdf'), dpi=150, bbox_inches="tight")
+        fig.savefig(os.path.join(out, f'{name}.png'), dpi=150, bbox_inches="tight")
         plt.close(fig)
 
-    def on_axis_max_vs_z(self):
-        fig, ax = plt.subplots(figsize=(8, 5))
-        ax.plot(self.z_diag, self.I_peak_n,   color='green', label='$I_{{max}} / I_0$')
-        ax.plot(self.z_diag, self.I_center_n, color='blue',  label='$I_{r=0} / I_0$')
+    def plot_on_axis_max_vs_z(self, fig=None, ax=None, save=True, res_dir=None):
+        if fig is None or ax is None:
+            fig, ax = plt.subplots(figsize=(8, 5))
 
-        ax.set_title(f'$I_{{max}}(x=0, y=0, z)/I_0$, Pin={self.pin_factor}Pcr, noisy input, artificial time')
+        label_peak   = f'$I_{{max}}/I_0$, Pin={self.pin_factor:.1f}Pcr (noise)'
+        label_center = f'$I_{{r=0}}/I_0$, Pin={self.pin_factor:.1f}Pcr (noise)'
+        ax.plot(self.z_diag, self.I_peak_n,   label=label_peak)
+        ax.plot(self.z_diag, self.I_center_n, label=label_center, linestyle='--')
+
         ax.set_xlabel('$z$ (m)')
-        ax.set_ylabel('$|I_{{max}}/I_0|$ (1)')
-        ax.legend()
-
+        ax.set_ylabel('$I/I_0$ (1)')
         ax.grid(True, alpha=0.3)
-        plt.tight_layout()
-        self.save(fig, 'max_I_vs_z')
+
+        if save:
+            ax.set_title(f'$I_{{max}}$ vs $z$, Pin={self.pin_factor:.1f}Pcr, noisy, artificial time')
+            ax.legend()
+            plt.tight_layout()
+            self.save(fig, 'max_I_vs_z', res_dir=res_dir)
+
+        return fig, ax
+
+    def on_axis_max_vs_z(self):
+        self.plot_on_axis_max_vs_z()
 
 
 class BeamSimulationZXY_hermite:
