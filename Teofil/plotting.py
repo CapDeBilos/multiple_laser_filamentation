@@ -73,7 +73,7 @@ class BeamSimulationZXY:
     def profile_x(self, z: float, fig=None, ax=None, save=True):
         z_idx = np.argmin(np.abs(self.snap_z - z))
         z_val = self.snap_z[z_idx]
-        z_str = f'{z_val:.3f}m'.replace('.', 'p')
+        z_str = f'{z_val:.3f}'.replace('.', 'p')
         x = self.snap_x[z_idx]
         snap = self.snaps_n[z_idx]
         I_n = snap[:, snap.shape[1] // 2]
@@ -122,7 +122,7 @@ class BeamSimulationZXY:
     def profile_xy(self, z: float):
         z_idx = np.argmin(np.abs(self.snap_z - z))
         z_val = self.snap_z[z_idx]
-        z_str = f'{z_val:.3f}m'.replace('.', 'p')
+        z_str = f'{z_val:.3f}'.replace('.', 'p')
         I_n = self.snaps_n[z_idx].T # because imshow treats array as (rows, cols) = (y, x)
 
         fig, ax = plt.subplots(figsize=(8, 5))
