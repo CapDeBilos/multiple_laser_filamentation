@@ -182,7 +182,7 @@ def compare_on_axis_max_vs_z(sims: list, res_dir: str, name: str = 'compare_max_
     # compare_profile_x_gaussian(pin_factor, zs=[0.239, 0.955, 1.194, 1.433])
 # compare_profile_x_square(pin_factor=20.0, zs=[0.159, 0.318, 0.955])
 
-# '''
+'''
 sim_clean = BeamSimulationZXY(
     '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/many_diags/Pin_018p0_Pcr_gaussian_4D_FFT_diagnostics.npz',
     '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/many_diags/',
@@ -200,6 +200,53 @@ compare_on_axis_max_vs_z(
 )
 # '''
 
+# '''
+def compare_on_axis_max_vs_z_ZXT(sims: list, res_dir: str, name: str = 'compare_max_I_vs_z'):
+    """
+    Parameters
+    ----------
+    sims    : list of BeamSimulationZXT instances
+    res_dir : directory where the combined figure is saved
+    name    : filename (without extension)
+    """
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    for sim in sims:
+        fig, ax = sim.plot_on_axis_max_vs_z(fig=fig, ax=ax, save=False)
+
+    ax.set_title('$I(x=0, t_{max}, z)/I_0$ — comparison')
+    ax.legend()
+    plt.tight_layout()
+
+    os.makedirs(res_dir, exist_ok=True)
+    fig.savefig(os.path.join(res_dir, f'{name}.pdf'), dpi=150, bbox_inches="tight")
+    fig.savefig(os.path.join(res_dir, f'{name}.png'), dpi=150, bbox_inches="tight")
+    plt.close(fig)
+# '''
+
+# '''
+sim_1 = BeamSimulationZXT(
+    '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxt/square/Pin_000p1_Pcr.npz',
+    '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxt/square/',
+    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxt/square/a_manual/'
+)
+sim_2 = BeamSimulationZXT(
+    '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxt/square/Pin_006p7_Pcr.npz',
+    '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxt/square/',
+    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxt/square/a_manual/'
+)
+sim_3 = BeamSimulationZXT(
+    '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxt/square/Pin_020p0_Pcr.npz',
+    '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxt/square/',
+    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxt/square/a_manual/'
+)
+
+compare_on_axis_max_vs_z_ZXT(
+    sims=[sim_1, sim_2, sim_3],
+    res_dir='/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxt/square/a_manual',
+    name='compare_square'
+)
+# '''
 
 # plot all files in all the dirs in a list of paths
 '''

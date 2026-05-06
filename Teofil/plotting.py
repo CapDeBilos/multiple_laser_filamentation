@@ -506,32 +506,45 @@ class BeamSimulationZXT:
         self.pin_factor      = data['pin_factor']
         self.Pcr             = data['Pcr']
         self.z_diag          = data['z_diag']
-        self.I_peak          = data['I_peak'].item()       # scalar
-        self.I_center_tmax   = data['I_center_tmax']       # 1d array over z
+        self.I_peak          = data['I_peak'].item()
+        self.I_center_tmax   = data['I_center_tmax']
         self.DeltaZ_diag     = data['DeltaZ_diag']
         self.Nx_diag         = data['Nx_diag']
         self.Nt_diag         = data['Nt_diag']
         self.x_cpu           = data['x']
         self.t_cpu           = data['t']
         self.I_final         = data['I_final']
-        self.I_center_tmax_n = self.I_center_tmax / self.I_peak   # normalize by initial peak
+        self.I_center_tmax_n = self.I_center_tmax / self.I_peak
 
-    def save(self, fig, name: str):
-        fig.savefig(os.path.join(self.res_dir, f'{name}.pdf'), dpi=150, bbox_inches="tight")
-        fig.savefig(os.path.join(self.res_dir, f'{name}.png'), dpi=150, bbox_inches="tight")
+    def save(self, fig, name: str, res_dir: str = None):
+        out = res_dir if res_dir is not None else self.res_dir
+        os.makedirs(out, exist_ok=True)
+        fig.savefig(os.path.join(out, f'{name}.pdf'), dpi=150, bbox_inches="tight")
+        fig.savefig(os.path.join(out, f'{name}.png'), dpi=150, bbox_inches="tight")
         plt.close(fig)
-    
-    def on_axis_max_vs_z(self):
-        fig, ax = plt.subplots(figsize=(8, 5))
-        try:
-            ax.plot(self.z_diag, self.I_center_tmax_n, color='green', label='$I(x=0, t_{max}) / I_0$')
-            ax.set_title(f'$I(x=0, t_{{max}}, z)/I_0$, Pin={self.pin_factor}Pcr')
-            ax.set_xlabel('$z$ (m)')
-            ax.set_ylabel('$|I/I_0|$ (1)')
+
+    def plot_on_axis_max_vs_z(self, fig=None, ax=None, save=True, res_dir=None):
+        if fig is None or ax is None:
+            fig, ax = plt.subplots(figsize=(8, 5))
+
+        ax.plot(self.z_diag, self.I_center_tmax_n,
+                label=f'$I(x=0, t_{{max}})/I_0$, Pin={self.pin_factor:.1f}Pcr')
+
+        ax.set_xlabel('$z$ (m)')
+        ax.set_ylabel('$|I/I_0|$ (1)')
+        ax.grid(True, alpha=0.3)
+
+        if save:
+            ax.set_title(f'$I(x=0, t_{{max}}, z)/I_0$, Pin={self.pin_factor:.1f}Pcr')
             ax.legend()
-            ax.grid(True, alpha=0.3)
             plt.tight_layout()
-            self.save(fig, 'max_I_vs_z')
+            self.save(fig, 'max_I_vs_z', res_dir=res_dir)
+
+        return fig, ax
+
+    def on_axis_max_vs_z(self):                  # unchanged behaviour
+        try:
+            self.plot_on_axis_max_vs_z()
         except Exception as e:
-            plt.close(fig)
+            plt.close('all')
             raise e
