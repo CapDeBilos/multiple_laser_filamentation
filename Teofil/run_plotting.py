@@ -184,19 +184,19 @@ def compare_on_axis_max_vs_z(sims: list, res_dir: str, name: str = 'compare_max_
 
 # '''
 sim_clean = BeamSimulationZXY(
-    '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/many_diags/Pin_005p0_Pcr_gaussian_4D_FFT_diagnostics.npz',
+    '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/many_diags/Pin_018p0_Pcr_gaussian_4D_FFT_diagnostics.npz',
     '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/many_diags/',
     '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/a_manual/'
 )
 sim_noisy = BeamSimulationZXY_Noise(
-    '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/noise/Pin_005p0_Pcr_xy_no_t_memory_optimized_noise.npz',
+    '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/noise/Pin_018p1_Pcr_xy_no_t_memory_optimized_noise.npz',
     '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/noise/',
     '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/a_manual/'
 )
 compare_on_axis_max_vs_z(
     sims=[sim_clean, sim_noisy],
     res_dir='/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/a_manual/',
-    name='compare_5p0Pcr'
+    name='compare_18p0Pcr'
 )
 # '''
 
