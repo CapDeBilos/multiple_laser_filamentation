@@ -189,7 +189,7 @@ sim_clean = BeamSimulationZXY(
     '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/a_manual/'
 )
 sim_noisy = BeamSimulationZXY_Noise(
-    '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/noise/Pin_018p1_Pcr_xy_no_t_memory_optimized_noise.npz',
+    '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/noise/Pin_018p0_Pcr_xy_no_t_memory_optimized_noise.npz',
     '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/noise/',
     '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/a_manual/'
 )
