@@ -141,12 +141,14 @@ def manual2(pin_factor, zs):
     fig, ax = sim.profile_x(z=0, save=False)
     for z in zs: # np.arange(0.239, 1.435, 0.239)
         fig, ax = sim.profile_x(z, fig=fig, ax=ax, save=False)
+    ax.set_xlim(-0.002, 0.002)
     ax.set_title(f'Intensity profile $I(x, y=0, z)/I_0$, Pin={sim.pin_factor}Pcr, artificial time')
     ax.legend()
     sim.save(fig, 'profile_x_many_z')
 
 
-manual1(12.0, [0.239, 0.955, 1.194, 1.433])
+# manual1(pin_factor=12.0, zs=[0.239, 0.955, 1.194, 1.433])
+manual2(pin_factor=20.0, zs=[0.159, 0.318, 0.955])
 
 
 # plot all files in all the dirs in a list of paths
