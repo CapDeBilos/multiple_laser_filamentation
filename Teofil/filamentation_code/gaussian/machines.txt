@@ -1,0 +1,10 @@
+cher.polytechnique.fr
+creuse.polytechnique.fr
+dordogne.polytechnique.fr
+doubs.polytechnique.fr
+essonne.polytechnique.fr
+finistere.polytechnique.fr
+gironde.polytechnique.fr
+indre.polytechnique.fr
+jura.polytechnique.fr
+landes.polytechnique.fr
