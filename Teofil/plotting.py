@@ -49,15 +49,16 @@ class BeamSimulationZXY:
         self.I_center_n     = self.I_center / self.I_peak[0]
         self.snaps_n        = np.array([snap / self.I_peak[0] for snap in self.snaps])
         # self.I0_n_fft       = np.abs(np.fft.fft2(self.snaps[0])).max() # the max intensity of the spectrum at z=0, not a good method
+        self.pin_str        = f'{self.pin_factor:04.1f}Pcr'.replace('.', 'p')
 
     def save(self, fig, name: str, res_dir: str = None):
         out = res_dir if res_dir is not None else self.res_dir
         os.makedirs(out, exist_ok=True)
-        fig.savefig(os.path.join(out, f'{name}.pdf'), dpi=150, bbox_inches="tight")
+        # fig.savefig(os.path.join(out, f'{name}.pdf'), dpi=150, bbox_inches="tight")
         fig.savefig(os.path.join(out, f'{name}.png'), dpi=150, bbox_inches="tight")
         plt.close(fig)
 
-    def plot_on_axis_max_vs_z(self, fig=None, ax=None, save=True, res_dir=None):
+    def plot_on_axis_max_vs_z(self, fig=None, ax=None, save=True, res_dir=None, ylim=None):
         if fig is None or ax is None:
             fig, ax = plt.subplots(figsize=(8, 5))
 
@@ -68,19 +69,20 @@ class BeamSimulationZXY:
 
         ax.set_xlabel('$z$ (m)')
         ax.set_ylabel('$I/I_0$ (1)')
+        if ylim:
+            ax.set_ylim(0, ylim)
         ax.grid(True, alpha=0.3)
 
         if save:
             ax.set_title(f'$I_{{max}}$ vs $z$, Pin={self.pin_factor:.1f}Pcr, artificial time')
             ax.legend()
             plt.tight_layout()
-            self.save(fig, 'max_I_vs_z', res_dir=res_dir)
+            self.save(fig, name=f'max_I_vs_z_{self.pin_str}', res_dir=res_dir)
 
-        return fig, ax
+        # return fig, ax
 
-    def on_axis_max_vs_z(self):
-        self.plot_on_axis_max_vs_z()
-    
+    def on_axis_max_vs_z(self, fig=None, ax=None, save=True, res_dir=None, ylim=None):
+        self.plot_on_axis_max_vs_z(fig=fig, ax=ax, save=save, res_dir=res_dir, ylim=ylim)
     
     def profile_x(self, z: float, fig=None, ax=None, save=True):
         z_idx = np.argmin(np.abs(self.snap_z - z))
@@ -131,15 +133,15 @@ class BeamSimulationZXY:
         # plt.show()
         return(fig, ax)
 
-    def profile_xy(self, z: float):
+    def profile_xy(self, z: float, save=True, res_dir=None):
         z_idx = np.argmin(np.abs(self.snap_z - z))
         z_val = self.snap_z[z_idx]
-        z_str = f'{z_val:.3f}'.replace('.', 'p')
+        z_str = f'{z_val:5.3f}'.replace('.', 'p')
         I_n = self.snaps_n[z_idx].T # because imshow treats array as (rows, cols) = (y, x)
 
         fig, ax = plt.subplots(figsize=(8, 5))
-
-        c = ax.imshow(I_n, cmap='hot', aspect='equal', # vmin=0, vmax=5,
+        
+        c = ax.imshow(I_n, cmap='hot', aspect='equal', vmin=0, vmax=0.7 * np.max(self.I_peak) / self.I_peak[0],
                 extent=[self.snap_x[z_idx][0], self.snap_x[z_idx][-1], self.snap_y[z_idx][0], self.snap_y[z_idx][-1]],
                 origin='lower')
         ax.set_title(f'Intensity profile $I(x, y, z = {z_val:.3f}m)/I_0$, Pin={self.pin_factor}Pcr, artificial time')
@@ -148,17 +150,18 @@ class BeamSimulationZXY:
         ax.set_ylabel('$y$ (m)')
         ax.set_xlim(-0.0015, 0.0015)
         ax.set_ylim(-0.0015, 0.0015)
-        
-        ax.grid(True, alpha=0.3)
         plt.tight_layout()
-        self.save(fig, f'profile_xy_z_{z_str}')
+        ax.grid(True, alpha=0.3)
+
+        if save:
+            self.save(fig, name=f'profile_xy_z_{z_str}', res_dir=res_dir)
         # plt.show()
 
-    def profile_zx(self):
+    def profile_zx(self, save=True, res_dir=None, lim=None):
         I_n = np.array([snap[:, snap.shape[1] // 2] for snap in self.snaps_n]).T
 
         fig, ax = plt.subplots(figsize=(8, 5))
-        c = ax.imshow(I_n, cmap='hot', aspect='auto', # vmin=0, vmax=5,
+        c = ax.imshow(I_n, cmap='hot', aspect='auto', vmin=0, vmax=lim,
                 extent=[self.snap_z[0], self.snap_z[-1], self.snap_x[0][0], self.snap_x[0][-1]],
                 origin='lower')
         ax.set_title(f'Intensity profile $I(x, y=0, z)/I_0$, Pin={self.pin_factor}Pcr, artificial time')
@@ -166,17 +169,18 @@ class BeamSimulationZXY:
         ax.set_xlabel('$z$ (m)')
         ax.set_ylabel('$x$ (m)')
         ax.set_ylim(-0.0015, 0.0015)
-        
+
         ax.grid(True, alpha=0.3)
         plt.tight_layout()
-        self.save(fig, f'profile_zx')
+        if save:
+            self.save(fig, name=f'profile_zx_{self.pin_str}', res_dir=res_dir)
         # plt.show()
     
-    def profile_zy(self):
+    def profile_zy(self, save=True, res_dir=None, lim=None):
         I_n = np.array([snap[snap.shape[0] // 2, :] for snap in self.snaps_n]).T
 
         fig, ax = plt.subplots(figsize=(8, 5))
-        c = ax.imshow(I_n, cmap='hot', aspect='auto', # vmin=0, vmax=5,
+        c = ax.imshow(I_n, cmap='hot', aspect='auto', vmin=0, vmax=lim,
                 extent=[self.snap_z[0], self.snap_z[-1], self.snap_y[0][0], self.snap_y[0][-1]],
                 origin='lower')
         ax.set_title(f'Intensity profile $I(x=0, y, z)/I_0$, Pin={self.pin_factor}Pcr, artificial time')
@@ -187,7 +191,8 @@ class BeamSimulationZXY:
         
         ax.grid(True, alpha=0.3)
         plt.tight_layout()
-        self.save(fig, f'profile_zy')
+        if save:
+            self.save(fig, name=f'profile_zy_{self.pin_str}', res_dir=res_dir)
         # plt.show()
 
     ''' This is an attempt to plot the frequency. It is not correct because we need the
@@ -231,9 +236,10 @@ class BeamSimulationZXY:
 class BeamSimulationZXY_Noise:
     def __init__(self, filepath: str, simulations_root: str, results_root: str):
         self.load(filepath)
-        self.sim_dir   = os.path.dirname(os.path.abspath(filepath))
-        self.file_name = f'Pin_{self.pin_factor:4.1f}Pcr_noise'.replace('.', 'p')
-        self.res_dir   = os.path.join(results_root, os.path.relpath(self.sim_dir, simulations_root), self.file_name)
+        self.sim_dir    = os.path.dirname(os.path.abspath(filepath))
+        # self.file_name  = os.path.splitext(os.path.basename(filepath))[0]
+        self.file_name  = f'Pin_{self.pin_factor:4.1f}Pcr'.replace('.', 'p')
+        self.res_dir    = os.path.join(results_root, os.path.relpath(self.sim_dir, simulations_root), self.file_name)
         os.makedirs(self.res_dir, exist_ok=True)
 
     def load(self, filepath: str):
@@ -262,15 +268,16 @@ class BeamSimulationZXY_Noise:
         self.amp_noise_clip_sigma    = data['amp_noise_clip_sigma']
         self.I_peak_n                = self.I_peak / self.I_peak[0]
         self.I_center_n              = self.I_center / self.I_peak[0]
+        self.pin_str        = f'{self.pin_factor:04.1f}Pcr'.replace('.', 'p')
 
     def save(self, fig, name: str, res_dir: str = None):
         out = res_dir if res_dir is not None else self.res_dir
         os.makedirs(out, exist_ok=True)
-        fig.savefig(os.path.join(out, f'{name}.pdf'), dpi=150, bbox_inches="tight")
+        # fig.savefig(os.path.join(out, f'{name}.pdf'), dpi=150, bbox_inches="tight")
         fig.savefig(os.path.join(out, f'{name}.png'), dpi=150, bbox_inches="tight")
         plt.close(fig)
 
-    def plot_on_axis_max_vs_z(self, fig=None, ax=None, save=True, res_dir=None):
+    def plot_on_axis_max_vs_z(self, fig=None, ax=None, save=True, res_dir=None, ylim=None):
         if fig is None or ax is None:
             fig, ax = plt.subplots(figsize=(8, 5))
 
@@ -281,18 +288,20 @@ class BeamSimulationZXY_Noise:
 
         ax.set_xlabel('$z$ (m)')
         ax.set_ylabel('$I/I_0$ (1)')
+        if ylim:
+            ax.set_ylim(0, ylim)
         ax.grid(True, alpha=0.3)
 
         if save:
             ax.set_title(f'$I_{{max}}$ vs $z$, Pin={self.pin_factor:.1f}Pcr, noisy, artificial time')
             ax.legend()
             plt.tight_layout()
-            self.save(fig, 'max_I_vs_z', res_dir=res_dir)
+            self.save(fig, name=f'max_I_vs_z_{self.pin_str}', res_dir=res_dir)
 
-        return fig, ax
+        # return fig, ax
 
-    def on_axis_max_vs_z(self):
-        self.plot_on_axis_max_vs_z()
+    def on_axis_max_vs_z(self, fig=None, ax=None, save=True, res_dir=None, ylim=None):
+        self.plot_on_axis_max_vs_z(fig=fig, ax=ax, save=save, res_dir=res_dir, ylim=ylim)
 
 
 class BeamSimulationZXY_hermite:
@@ -331,26 +340,38 @@ class BeamSimulationZXY_hermite:
         # self.I_center_n     = self.I_center / self.I_peak[0]
         self.snaps_n        = np.array([snap / self.I_peak[0] for snap in self.snaps])
         # self.I0_n_fft       = np.abs(np.fft.fft2(self.snaps[0])).max() # the max intensity of the spectrum at z=0, not a good method
+        self.pin_str        = f'{self.pin_factor:04.1f}Pcr'.replace('.', 'p')
 
-    def save(self, fig, name: str):
-        fig.savefig(os.path.join(self.res_dir, f'{name}.pdf'), dpi=150, bbox_inches="tight")
-        fig.savefig(os.path.join(self.res_dir, f'{name}.png'), dpi=150, bbox_inches="tight")
+    def save(self, fig, name: str, res_dir: str = None):
+        out = res_dir if res_dir is not None else self.res_dir
+        os.makedirs(out, exist_ok=True)
+        # fig.savefig(os.path.join(out, f'{name}.pdf'), dpi=150, bbox_inches="tight")
+        fig.savefig(os.path.join(out, f'{name}.png'), dpi=150, bbox_inches="tight")
         plt.close(fig)
 
-    def on_axis_max_vs_z(self):
-        fig, ax = plt.subplots(figsize=(8, 5))
-        ax.plot(self.z_diag, self.I_peak_n, color='green', label='$I_{max} / I_0$')
-        # ax.plot(self.z_diag, self.I_center_n, color='blue', label='$I_{r=0} / I_0$')
+    def on_axis_max_vs_z(self, fig=None, ax=None, save=True, res_dir=None, ylim=None):
+        if fig is None or ax is None:
+            fig, ax = plt.subplots(figsize=(8, 5))
+        
+        label_peak   = f'$I_{{max}}/I_0$, Pin={self.pin_factor:.1f}Pcr'
+        # label_center = f'$I_{{r=0}}/I_0$, Pin={self.pin_factor:.1f}Pcr'
+        ax.plot(self.z_diag, self.I_peak_n,   label=label_peak)
+        # ax.plot(self.z_diag, self.I_center_n, label=label_center, linestyle='--')
 
-        ax.set_title(f'$I_{{max}}(x=0, y=0, z)/I_0$, Pin={self.pin_factor}Pcr, artificial time')
         ax.set_xlabel('$z$ (m)')
         ax.set_ylabel('$|I_{{max}}/I_0|$ (1)')
-        ax.legend()
-
+        if ylim:
+            ax.set_ylim(0, ylim)
         ax.grid(True, alpha=0.3)
-        plt.tight_layout()
-        self.save(fig, f'max_I_vs_z')
+
+        if save:
+            ax.set_title(f'$I_{{max}}(x=0, y=0, z)/I_0$, Pin={self.pin_factor:.1f}Pcr, artificial time')
+            ax.legend()
+            plt.tight_layout()
+            self.save(fig, name=f'max_I_vs_z_{self.pin_str}', res_dir=res_dir)
+
         # plt.show()
+        # return fig, ax
     
     def profile_x(self, z: float, fig=None, ax=None, save=True):
         z_idx = np.argmin(np.abs(self.snap_z - z))
@@ -400,62 +421,66 @@ class BeamSimulationZXY_hermite:
         # plt.show()
         return(fig, ax)
 
-    def profile_xy(self, z: float):
+    def profile_xy(self, z: float, save=True, res_dir=None):
         z_idx = np.argmin(np.abs(self.snap_z - z))
         z_val = self.snap_z[z_idx]
-        z_str = f'{z_val:.3f}'.replace('.', 'p')
+        z_str = f'{z_val:5.3f}'.replace('.', 'p')
         I_n = self.snaps_n[z_idx].T # because imshow treats array as (rows, cols) = (y, x)
 
         fig, ax = plt.subplots(figsize=(6, 6))
-        c = ax.imshow(I_n, cmap='hot', aspect='equal', # vmin=0, vmax=5,
+
+        c = ax.imshow(I_n, cmap='hot', aspect='equal', vmin=0, vmax=0.7 * np.max(self.I_peak) / self.I_peak[0],
                 extent=[self.snap_x[z_idx][0], self.snap_x[z_idx][-1], self.snap_y[z_idx][0], self.snap_y[z_idx][-1]],
                 origin='lower')
         ax.set_title(f'Intensity profile $I(x, y, z = {z_val:.3f})/I_0$, Pin={self.pin_factor}Pcr, artificial time')
         fig.colorbar(c, ax=ax, label='$|I/I_0|$ (1)', fraction=0.046, pad=0.04)
         ax.set_xlabel('$x$ (m)')
         ax.set_ylabel('$y$ (m)')
-        ax.set_xlim(-0.0035, 0.0035)
-        ax.set_ylim(-0.0035, 0.0035)
-        
-        ax.grid(True, alpha=0.3)
+        ax.set_xlim(-0.0025, 0.0025)
+        ax.set_ylim(-0.0025, 0.0025)
         plt.tight_layout()
-        self.save(fig, f'profile_xy_z_{z_str}')
+        ax.grid(True, alpha=0.3)
+        
+        if save:
+            self.save(fig, name=f'profile_xy_z_{z_str}', res_dir=res_dir)
         # plt.show()
 
-    def profile_zx(self):
+    def profile_zx(self, save=True, res_dir=None, lim=None):
         I_n = np.array([snap[:, snap.shape[1] // 2] for snap in self.snaps_n]).T
 
         fig, ax = plt.subplots(figsize=(8, 5))
-        c = ax.imshow(I_n, cmap='hot', aspect='auto', # vmin=0, vmax=5,
+        c = ax.imshow(I_n, cmap='hot', aspect='auto', vmin=0, vmax=lim,
                 extent=[self.snap_z[0], self.snap_z[-1], self.snap_x[0][0], self.snap_x[0][-1]],
                 origin='lower')
         ax.set_title(f'Intensity profile $I(x, y=0, z)/I_0$, Pin={self.pin_factor}Pcr, artificial time')
         fig.colorbar(c, ax=ax, label='$|I/I_0|$ (1)')
         ax.set_xlabel('$z$ (m)')
         ax.set_ylabel('$x$ (m)')
-        ax.set_ylim(-0.0035, 0.0035)
-        
+        ax.set_ylim(-0.0030, 0.0030)
+
         ax.grid(True, alpha=0.3)
         plt.tight_layout()
-        self.save(fig, f'profile_zx')
+        if save:
+            self.save(fig, name=f'profile_zx_{self.pin_str}', res_dir=res_dir)
         # plt.show()
     
-    def profile_zy(self):
+    def profile_zy(self, save=True, res_dir=None, lim=None):
         I_n = np.array([snap[snap.shape[0] // 2, :] for snap in self.snaps_n]).T
 
         fig, ax = plt.subplots(figsize=(8, 5))
-        c = ax.imshow(I_n, cmap='hot', aspect='auto', # vmin=0, vmax=5,
+        c = ax.imshow(I_n, cmap='hot', aspect='auto', vmin=0, vmax=lim,
                 extent=[self.snap_z[0], self.snap_z[-1], self.snap_y[0][0], self.snap_y[0][-1]],
                 origin='lower')
         ax.set_title(f'Intensity profile $I(x=0, y, z)/I_0$, Pin={self.pin_factor}Pcr, artificial time')
         fig.colorbar(c, ax=ax, label='$|I/I_0|$ (1)')
         ax.set_xlabel('$z$ (m)')
         ax.set_ylabel('$y$ (m)')
-        ax.set_ylim(-0.0035, 0.0035)
+        ax.set_ylim(-0.0030, 0.0030)
         
         ax.grid(True, alpha=0.3)
         plt.tight_layout()
-        self.save(fig, f'profile_zy')
+        if save:
+            self.save(fig, name=f'profile_zy_{self.pin_str}', res_dir=res_dir)
         # plt.show()
 
 
@@ -473,24 +498,34 @@ class BeamSimulationZRT:
         self.z           = data['z']
         self.I_axis_max_t = data['I_axis_max_t']
         self.I_ratio     = data['I_ratio']
+        self.pin_str        = f'{self.pin_factor:04.1f}Pcr'.replace('.', 'p')
 
-    def save(self, fig, name: str):
-        fig.savefig(os.path.join(self.res_dir, f'{name}.pdf'), dpi=150, bbox_inches="tight")
-        fig.savefig(os.path.join(self.res_dir, f'{name}.png'), dpi=150, bbox_inches="tight")
+    def save(self, fig, name: str, res_dir: str = None):
+        out = res_dir if res_dir is not None else self.res_dir
+        os.makedirs(out, exist_ok=True)
+        # fig.savefig(os.path.join(self.res_dir, f'{name}.pdf'), dpi=150, bbox_inches="tight")
+        fig.savefig(os.path.join(out, f'{name}.png'), dpi=150, bbox_inches="tight")
         plt.close(fig)
 
-    def on_axis_max_vs_z(self):
-        fig, ax = plt.subplots(figsize=(8, 5))
+    def on_axis_max_vs_z(self, fig=None, ax=None, save=True, res_dir=None, ylim=None):
+        if fig is None or ax is None:
+            fig, ax = plt.subplots(figsize=(8, 5))
+
         ax.plot(self.z, self.I_ratio, color='green', label='$I_{max} / I_0$')
 
-        ax.set_title(f'$I_{{max}}(r=0, z)/I_0$, Pin={self.pin_factor}Pcr')
         ax.set_xlabel('$z$ (m)')
         ax.set_ylabel('$|I_{{max}}/I_0|$ (1)')
-        ax.legend()
-
+        if ylim:
+            ax.set_ylim(0, ylim)
         ax.grid(True, alpha=0.3)
-        plt.tight_layout()
-        self.save(fig, 'max_I_vs_z')
+
+        if save:
+            ax.set_title(f'$I_{{max}}(r=0, z)/I_0$, Pin={self.pin_factor:.1f}Pcr')
+            ax.legend()
+            plt.tight_layout()
+            self.save(fig, name=f'max_I_vs_z_{self.pin_str}', res_dir=res_dir)
+
+        # return fig, ax
 
 
 class BeamSimulationZXT:
@@ -515,15 +550,16 @@ class BeamSimulationZXT:
         self.t_cpu           = data['t']
         self.I_final         = data['I_final']
         self.I_center_tmax_n = self.I_center_tmax / self.I_peak
+        self.pin_str        = f'{self.pin_factor:04.1f}Pcr'.replace('.', 'p')
 
     def save(self, fig, name: str, res_dir: str = None):
         out = res_dir if res_dir is not None else self.res_dir
         os.makedirs(out, exist_ok=True)
-        fig.savefig(os.path.join(out, f'{name}.pdf'), dpi=150, bbox_inches="tight")
+        # fig.savefig(os.path.join(out, f'{name}.pdf'), dpi=150, bbox_inches="tight")
         fig.savefig(os.path.join(out, f'{name}.png'), dpi=150, bbox_inches="tight")
         plt.close(fig)
 
-    def plot_on_axis_max_vs_z(self, fig=None, ax=None, save=True, res_dir=None):
+    def plot_on_axis_max_vs_z(self, fig=None, ax=None, save=True, res_dir=None, ylim=None):
         if fig is None or ax is None:
             fig, ax = plt.subplots(figsize=(8, 5))
 
@@ -532,19 +568,21 @@ class BeamSimulationZXT:
 
         ax.set_xlabel('$z$ (m)')
         ax.set_ylabel('$|I/I_0|$ (1)')
+        if ylim:
+            ax.set_ylim(0, ylim)
         ax.grid(True, alpha=0.3)
 
         if save:
             ax.set_title(f'$I(x=0, t_{{max}}, z)/I_0$, Pin={self.pin_factor:.1f}Pcr')
             ax.legend()
             plt.tight_layout()
-            self.save(fig, 'max_I_vs_z', res_dir=res_dir)
+            self.save(fig, name=f'max_I_vs_z_{self.pin_str}', res_dir=res_dir)
 
-        return fig, ax
+        # return fig, ax
 
-    def on_axis_max_vs_z(self):                  # unchanged behaviour
+    def on_axis_max_vs_z(self, fig=None, ax=None, save=True, res_dir=None, ylim=None):                  # unchanged behaviour
         try:
-            self.plot_on_axis_max_vs_z()
+            self.plot_on_axis_max_vs_z(fig=fig, ax=ax, save=save, res_dir=res_dir, ylim=ylim)
         except Exception as e:
             plt.close('all')
             raise e
