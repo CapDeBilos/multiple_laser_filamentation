@@ -1,124 +1,128 @@
+import glob
 from plotting import *
 
 ########## Run the code on real data
 # run the plots for all subdirs of the Simulations directory, saving automatically to the Results directory
-def run_ZXY(simulations_root: str, results_root: str, zs, res_dir=None):
-    for dirpath, _, files in os.walk(simulations_root):
-        for file in files:
-            if file.endswith('.npz'):
-                filepath = os.path.join(dirpath, file)
-                print(f'Processing {filepath}...')
-                try:
-                    sim = BeamSimulationZXY(filepath, simulations_root, results_root)
-                    sim.on_axis_max_vs_z(res_dir=os.path.join(res_dir, 'max_I_z'), ylim=35)
-                    sim.profile_zx(res_dir=os.path.join(res_dir, 'zx'), lim=20)
-                    sim.profile_zy(res_dir=os.path.join(res_dir, 'zy'), lim=20)
-                    # sim.profile_xy(0.0)
-                    for z in zs:
-                        # sim.profile_x(z)
-                        # sim.profile_y(z)
-                        sim.profile_xy(z=z, res_dir=os.path.join(res_dir, 'xy', f'pin_{sim.pin_str}'))
-                    print(f'Saved in {res_dir}')
-                    print(f'Done with {filepath}')
-                except Exception as e:
-                    print(f'Error processing {filepath}: {e}')
+def run_ZXY(directory: str, results_root: str, zs, subdir: str = '', ylim_I=None, vmax_zx=None, vmax_zy=None, vmax_xy=False):
+    for filepath in glob.glob(os.path.join(directory, '*.npz')):
+        print(f'Processing {filepath}...')
+        try:
+            sim = BeamSimulationZXY(filepath, simulations_root=directory, results_root=results_root)
+            out_dir = os.path.join(results_root, subdir) if subdir else results_root
 
-def run_ZXY_Noise(simulations_root: str, results_root: str, res_dir=None):
-    for dirpath, _, files in os.walk(simulations_root):
-        for file in files:
-            if file.endswith('.npz'):
-                filepath = os.path.join(dirpath, file)
-                print(f'Processing {filepath}...')
-                try:
-                    sim = BeamSimulationZXY_Noise(filepath, simulations_root, results_root)
-                    sim.on_axis_max_vs_z(res_dir=os.path.join(res_dir, 'max_I_z'), ylim=90)
-                    print(f'Saved in {res_dir}')
-                    print(f'Done with {filepath}')
-                except Exception as e:
-                    print(f'Error processing {filepath}: {e}')
+            sim.on_axis_max_vs_z(res_dir=os.path.join(out_dir, 'max_I_z'), ylim=ylim_I)
+            sim.profile_zx(res_dir=os.path.join(out_dir, 'zx'), vmax=vmax_zx)
+            sim.profile_zy(res_dir=os.path.join(out_dir, 'zy'), vmax=vmax_zy)
 
-def run_ZXY_hermite(simulations_root: str, results_root: str, zs, res_dir=None):
-    for dirpath, _, files in os.walk(simulations_root):
-        for file in files:
-            if file.endswith('.npz'):
-                filepath = os.path.join(dirpath, file)
-                print(f'Processing {filepath}...')
-                try:
-                    sim = BeamSimulationZXY_hermite(filepath, simulations_root, results_root)
-                    sim.on_axis_max_vs_z(res_dir=os.path.join(res_dir, 'max_I_z'), ylim=40)
-                    sim.profile_zx(res_dir=os.path.join(res_dir, 'zx'), lim=10)
-                    sim.profile_zy(res_dir=os.path.join(res_dir, 'zy'), lim=10)
-                    # sim.profile_xy(0.0)
-                    for z in zs:
-                        # sim.profile_x(z)
-                        # sim.profile_y(z)
-                        sim.profile_xy(z=z, res_dir=os.path.join(res_dir, 'xy', f'pin_{sim.pin_str}'))
-                    print(f'Saved in {res_dir}')
-                    print(f'Done with {filepath}')
-                except Exception as e:
-                    print(f'Error processing {filepath}: {e}')
+            for z in zs:
+                sim.profile_xy(z=z, res_dir=os.path.join(out_dir, 'xy', f'profile_xy_{sim.pin_str}'), vmax=vmax_xy)
 
-def run_ZXT(simulations_root: str, results_root: str, res_dir=None):
-    for dirpath, _, files in os.walk(simulations_root):
-        for file in files:
-            if file.endswith('.npz'):
-                filepath = os.path.join(dirpath, file)
-                print(f'Processing {filepath}...')
-                try:
-                    sim = BeamSimulationZXT(filepath, simulations_root, results_root)
-                    sim.on_axis_max_vs_z(res_dir=os.path.join(res_dir, 'max_I_z'), ylim=11)
-                    print(f'Saved in {res_dir}')
-                    print(f'Done with {filepath}')
-                except Exception as e:
-                    print(f'Error processing {filepath}: {e}')
+            print(f'Done — saved in {out_dir}')
+        except Exception as e:
+            print(f'Error processing {filepath}: {e}')
 
-def run_ZRT(simulations_root: str, results_root: str, res_dir=None):
-    for dirpath, _, files in os.walk(simulations_root):
-        for file in files:
-            if file.endswith('.npz'):
-                filepath = os.path.join(dirpath, file)
-                print(f'Processing {filepath}...')
-                try:
-                    sim = BeamSimulationZRT(filepath, simulations_root, results_root)
-                    sim.on_axis_max_vs_z(res_dir=os.path.join(res_dir, 'max_I_z'), ylim=100)
-                    print(f'Saved in {res_dir}')
-                    print(f'Done with {filepath}')
-                except Exception as e:
-                    print(f'Error processing {filepath}: {e}')
+def run_ZXY_Noise(directory: str, results_root: str, subdir: str = 'max_I_z', ylim=None):
+    out_dir = os.path.join(results_root, subdir)
+    for filepath in glob.glob(os.path.join(directory, '*.npz')):
+        print(f'Processing {filepath}...')
+        try:
+            sim = BeamSimulationZXY_Noise(filepath, simulations_root=directory, results_root=results_root)
+            sim.on_axis_max_vs_z(res_dir=out_dir, ylim=ylim)
+            print(f'Done — saved in {out_dir}')
+        except Exception as e:
+            print(f'Error processing {filepath}: {e}')
+
+def run_ZXY_hermite(directory: str, results_root: str, zs, subdir: str = '', ylim_I=None, vmax_zx=None, vmax_zy=None, vmax_xy=False):
+    for filepath in glob.glob(os.path.join(directory, '*.npz')):
+        print(f'Processing {filepath}...')
+        try:
+            sim = BeamSimulationZXY_hermite(filepath, simulations_root=directory, results_root=results_root)
+            out_dir = os.path.join(results_root, subdir) if subdir else results_root
+
+            sim.on_axis_max_vs_z(res_dir=os.path.join(out_dir, 'max_I_z'), ylim=ylim_I)
+            sim.profile_zx(res_dir=os.path.join(out_dir, 'zx'), vmax=vmax_zx)
+            sim.profile_zy(res_dir=os.path.join(out_dir, 'zy'), vmax=vmax_zy)
+
+            for z in zs:
+                sim.profile_xy(z=z, res_dir=os.path.join(out_dir, 'xy', f'profile_xy_{sim.pin_str}'), vmax=vmax_xy)
+
+            print(f'Done — saved in {out_dir}')
+        except Exception as e:
+            print(f'Error processing {filepath}: {e}')
+
+def run_ZXT(directory: str, results_root: str, subdir: str = 'max_I_z', ylim=None):
+    out_dir = os.path.join(results_root, subdir)
+    for filepath in glob.glob(os.path.join(directory, '*.npz')):
+        print(f'Processing {filepath}...')
+        try:
+            sim = BeamSimulationZXT(filepath, simulations_root=directory, results_root=results_root)
+            sim.on_axis_max_vs_z(res_dir=out_dir, ylim=ylim)
+            print(f'Done — saved in {out_dir}')
+        except Exception as e:
+            print(f'Error processing {filepath}: {e}')
+
+def run_ZRT(directory: str, results_root: str, subdir: str = 'max_I_z', ylim=None):
+    out_dir = os.path.join(results_root, subdir)
+    for filepath in glob.glob(os.path.join(directory, '*.npz')):
+        print(f'Processing {filepath}...')
+        try:
+            sim = BeamSimulationZRT(filepath, simulations_root=directory, results_root=results_root)
+            sim.on_axis_max_vs_z(res_dir=out_dir, ylim=ylim)
+            print(f'Done — saved in {out_dir}')
+        except Exception as e:
+            print(f'Error processing {filepath}: {e}')
 
 
-# gaussian
-# run_ZXY('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/many_diags/',
-        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/no_noise/many_diags/',
-        #    np.arange(0.0, 4.0, 0.079611),
-        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/no_noise/many_diags/gif')
+# ZXY, gaussian, no noise
+# run_ZXY(
+    # '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/',
+    # '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/no_noise/',
+    # np.arange(0.0, 4.0, 0.079611),
+    # subdir='dynamic',
+    # ylim_I=None, vmax_zx=None, vmax_zy=None, vmax_xy=False,
+# )
 
-# square
-# run_ZXY('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/square/',
-        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/square/',
-        #    np.arange(0.0, 4.0, 0.079611),
-        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/square/gif/')
+# ZXY, gaussian, with noise
+# run_ZXY_Noise(
+    # '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/noise/',
+    # '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/noise/',
+    # subdir='dynamic',
+    # ylim=None, # 90
+# )
 
-# gaussian with noise
-# run_ZXY_Noise('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/noise/',
-        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/noise/',
-        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/noise/gif/') 
+# ZXY, square
+# run_ZXY(
+    # '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/square/',
+    # '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/square/',
+    # np.arange(0.0, 4.0, 0.079611),
+    # subdir='dynamic',
+    # ylim_I=None, vmax_zx=None, vmax_zy=None, vmax_xy=False, # 35, 20, 20, False
+# )
 
-# hermite
-# run_ZXY_hermite('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/hermite_2_1/',
-        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/hermite_2_1/',
-        #    np.arange(0.0, 4.0, 0.079611),
-        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/hermite_2_1/gif/')
+# ZXY, hermite
+# run_ZXY_hermite(
+    # '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/hermite_2_1/',
+    # '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/hermite_2_1/',
+    # np.arange(0.0, 4.0, 0.079611),
+    # subdir='dynamic',
+    # ylim_I=None, vmax_zx=None, vmax_zy=None, vmax_xy=False # 40, 10, 10, True
+# )
 
 # ZXT gaussian or square
-# run_ZXT('/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxt/square/',
-        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxt/square/',
-        #    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxt/square/gif')
+# run_ZXT(
+    # '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxt/square/',
+    # '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxt/square/',
+    # subdir='dynamic',
+    # ylim=None,
+# )
 
 # gaussian, plasma
-run_ZRT('/home/teofil/Desktop/Eldyn_sims/Simulations/FD/zrt/no_plasma/',
-           '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FD/zrt/no_plasma/',
-           '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FD/zrt/no_plasma/gif/')
+run_ZRT(
+    '/home/teofil/Desktop/Eldyn_sims/Simulations/FD/zrt/no_plasma/',
+    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FD/zrt/no_plasma/',
+    subdir='dynamic',
+    ylim=None,
+)
 
 
 ########## Some tests
