@@ -467,7 +467,7 @@ class BeamSimulationZXT:
         fig.subplots_adjust(left=0.12, right=0.95, top=0.92, bottom=0.12)
 
         ax.plot(self.z_diag, self.I_center_tmax_n,
-                label=f'$I(x=0, t_{{max}})/I_0$, Pin={self.pin_factor:.1f}Pcr')
+                label=f'$I_{{max}}(x=0, z)/I_0$, Pin={self.pin_factor:.1f}Pcr')
         ax.set_xlabel('$z$ (m)')
         ax.set_ylabel('$|I/I_0|$ (1)')
         if ylim:

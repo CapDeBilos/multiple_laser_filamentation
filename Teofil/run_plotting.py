@@ -74,13 +74,13 @@ def run_ZRT(directory: str, results_root: str, subdir: str = 'max_I_z', ylim=Non
 
 
 # ZXY, gaussian, no noise
-run_ZXY(
-    '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/',
-    '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/no_noise/',
-    np.arange(0.0, 4.0, 0.079611),
-    subdir='dynamic',
-    ylim_I=None, vmax_zx=None, vmax_zy=None, vmax_xy=False,
-)
+# run_ZXY(
+    # '/home/teofil/Desktop/Eldyn_sims/Simulations/FFT/zxy/gaussian/no_noise/',
+    # '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FFT/zxy/gaussian/no_noise/',
+    # np.arange(0.0, 4.0, 0.079611),
+    # subdir='dynamic',
+    # ylim_I=None, vmax_zx=None, vmax_zy=None, vmax_xy=False,
+# )
 
 # ZXY, gaussian, with noise
 # run_ZXY_Noise(
@@ -206,6 +206,28 @@ def compare_on_axis_max_vs_z_ZXT(sims: list, res_dir: str, name: str = 'compare_
     fig.savefig(os.path.join(res_dir, f'{name}.png'), dpi=150, bbox_inches="tight")
     plt.close(fig)
 
+def compare_on_axis_max_vs_z_ZRT(sims: list, res_dir: str, name: str = 'compare_max_I_vs_z'):
+    """
+    Parameters
+    ----------
+    sims    : list of BeamSimulationZRT instances
+    res_dir : directory where the combined figure is saved
+    name    : filename (without extension)
+    """
+    fig, ax = plt.subplots(figsize=(8, 6))
+
+    for sim in sims:
+        fig, ax = sim.on_axis_max_vs_z(fig=fig, ax=ax, save=False)
+
+    ax.set_title('$I(x=0, t_{max}, z)/I_0$ — comparison')
+    ax.legend()
+    plt.tight_layout()
+
+    os.makedirs(res_dir, exist_ok=True)
+    fig.savefig(os.path.join(res_dir, f'{name}.pdf'), dpi=150, bbox_inches="tight")
+    fig.savefig(os.path.join(res_dir, f'{name}.png'), dpi=150, bbox_inches="tight")
+    plt.close(fig)
+
 '''
 for pin_factor in [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]:
     compare_profile_x_gaussian(pin_factor, zs=[0.239, 0.955, 1.194, 1.433])
@@ -253,3 +275,29 @@ compare_on_axis_max_vs_z_ZXT(
     name='compare_square'
 )
 # '''
+
+# graphs similar to Mlejnek 1998
+sim_1 = BeamSimulationZRT(
+    filepath            = '/home/teofil/Desktop/Eldyn_sims/Simulations/FD/zrt/plasma/Pin_002p0_Pcr.npz',
+    simulations_root    = '/home/teofil/Desktop/Eldyn_sims/Simulations/FD/zrt/plasma/',
+    results_root        = '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FD/zrt/plasma/a_manual/',
+)
+
+sim_2 = BeamSimulationZRT(
+    filepath            = '/home/teofil/Desktop/Eldyn_sims/Simulations/FD/zrt/plasma/Pin_002p9_Pcr.npz',
+    simulations_root    = '/home/teofil/Desktop/Eldyn_sims/Simulations/FD/zrt/plasma/',
+    results_root        = '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FD/zrt/plasma/a_manual/',
+)
+
+sim_3 = BeamSimulationZRT(
+    filepath            = '/home/teofil/Desktop/Eldyn_sims/Simulations/FD/zrt/plasma/Pin_003p8_Pcr.npz',
+    simulations_root    = '/home/teofil/Desktop/Eldyn_sims/Simulations/FD/zrt/plasma/',
+    results_root        = '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FD/zrt/plasma/a_manual/',
+)
+
+compare_on_axis_max_vs_z_ZRT(
+    sims        = [sim_1, sim_2, sim_3],
+    res_dir     = '/media/teofil/Data/Teofil/Ecole/_S04/ELDYN/Project/Our_project/Code/multiple_laser_filamentation/Results/FD/zrt/plasma/a_manual/',
+    name        = 'mlejnek_comparison',
+)
+
