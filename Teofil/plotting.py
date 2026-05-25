@@ -460,7 +460,7 @@ class BeamSimulationZXT:
         fig.savefig(os.path.join(out, f'{name}.pdf'), dpi=150, bbox_inches="tight")
         fig.savefig(os.path.join(out, f'{name}.png'), dpi=150, bbox_inches="tight")
         plt.close(fig)
-
+        
     def on_axis_max_vs_z(self, fig=None, ax=None, save=True, res_dir=None, ylim=None):
         if fig is None or ax is None:
             fig, ax = plt.subplots(figsize=(8, 5))
