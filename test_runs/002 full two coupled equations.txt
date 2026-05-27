@@ -1,8 +1,0 @@
-This simulation concerns the following initial parameters:
-Pin = 6.5 * Pcr
-Nr = 1_000
-Nt = 100
-mag = 100
-Nz = 1_000
-The rest of the parameters can be found in the Mlejnek 98 paper. 
-running time 6m 59s
